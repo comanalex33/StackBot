@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { globalStyles } from '../styles/global';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -31,83 +31,93 @@ export default function Login({ navigation }) {
 
     return (
         <View style={globalStyles.container}>
-            <View style={styles.formContainer}>
-                <View style={styles.titleContainer}>
-                    <Text style={styles.loginTitle}>StackBot</Text>
+            <ImageBackground source={require('../assets/auth_background.png')} style={styles.backgroundImage}>
+                <View style={styles.authContainer}>
+                    <View style={styles.formContainer}>
+                        <Formik
+                            initialValues={{ email: '', password: '' }}
+                            validationSchema={reviewSchema}
+                            onSubmit={(values, actions) => {
+                                actions.resetForm();
+                                handleLogin(values);
+                            }}
+                            onReset={() => { }}
+                        >
+                            {props => (
+                                <View>
+                                    <View style={styles.titleContainer}>
+                                        <Text style={styles.loginTitle}>StackBot</Text>
+                                    </View>
+
+                                    <TextInput
+                                        style={globalStyles.input}
+                                        keyboardType="email-address"
+                                        placeholder='Enter Email'
+                                        placeholderTextColor="#aaa"
+                                        onChangeText={props.handleChange('email')}
+                                        onBlur={props.handleBlur('email')}
+                                        value={props.values.email}
+                                    />
+                                    {/* only if the left value is a valid string, will the right value be displayed */}
+                                    <Text style={globalStyles.errorText}>{props.touched.email && props.errors.email}</Text>
+
+                                    <View style={styles.passwordContainer}>
+                                        <TextInput
+
+                                            // Set secureTextEntry prop to hide  
+                                            //password when showPassword is false 
+                                            secureTextEntry={!showPassword}
+                                            value={props.values.password}
+                                            onChangeText={props.handleChange('password')}
+                                            style={styles.passwordInput}
+                                            placeholder="Enter Password"
+                                            placeholderTextColor="#aaa"
+                                        />
+                                        <MaterialCommunityIcons
+                                            name={showPassword ? 'eye-off' : 'eye'}
+                                            size={24}
+                                            color="#aaa"
+                                            style={styles.icon}
+                                            onPress={toggleShowPassword}
+                                        />
+                                    </View>
+                                    <Text style={globalStyles.errorText}>{props.touched.password && props.errors.password}</Text>
+
+                                    <FlatButton onPress={props.handleSubmit} text='login' />
+                                    <View style={styles.titleContainer}>
+                                        <Text style={styles.createAccountText}>Don't have an account?</Text>
+                                        <TouchableOpacity onPress={(event) => {
+                                            handleChangeToRegisterPage();
+                                            props.handleReset(event)
+                                        }}>
+                                            <Text style={styles.createAccountButton}>Create one</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            )}
+                        </Formik>
+                    </View>
                 </View>
-                <Formik
-                    initialValues={{ email: '', password: '' }}
-                    validationSchema={reviewSchema}
-                    onSubmit={(values, actions) => {
-                        actions.resetForm();
-                        handleLogin(values);
-                    }}
-                    onReset={() => { }}
-                >
-                    {props => (
-                        <View>
-                            <TextInput
-                                style={globalStyles.input}
-                                keyboardType="email-address"
-                                placeholder='Enter Email'
-                                placeholderTextColor="#aaa"
-                                onChangeText={props.handleChange('email')}
-                                onBlur={props.handleBlur('email')}
-                                value={props.values.email}
-                            />
-                            {/* only if the left value is a valid string, will the right value be displayed */}
-                            <Text style={globalStyles.errorText}>{props.touched.email && props.errors.email}</Text>
-
-                            <View style={styles.passwordContainer}>
-                                <TextInput
-
-                                    // Set secureTextEntry prop to hide  
-                                    //password when showPassword is false 
-                                    secureTextEntry={!showPassword}
-                                    value={props.values.password}
-                                    onChangeText={props.handleChange('password')}
-                                    style={styles.passwordInput}
-                                    placeholder="Enter Password"
-                                    placeholderTextColor="#aaa"
-                                />
-                                <MaterialCommunityIcons
-                                    name={showPassword ? 'eye-off' : 'eye'}
-                                    size={24}
-                                    color="#aaa"
-                                    style={styles.icon}
-                                    onPress={toggleShowPassword}
-                                />
-                            </View>
-                            <Text style={globalStyles.errorText}>{props.touched.password && props.errors.password}</Text>
-
-                            <FlatButton onPress={props.handleSubmit} text='login' />
-                            <View style={styles.titleContainer}>
-                                <Text style={styles.createAccountText}>Don't have an account?</Text>
-                                <TouchableOpacity onPress={(event) => {
-                                    handleChangeToRegisterPage();
-                                    props.handleReset(event)
-                                }}>
-                                    <Text style={styles.createAccountButton}>Create one</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    )}
-                </Formik>
-            </View>
+            </ImageBackground>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    formContainer: {
+    backgroundImage: {
+        height: '100%',
+        width: '100%',
+    },
+    authContainer: {
         flex: 1,
         display: 'flex',
         justifyContent: 'center',
+        padding: 20,
     },
-    loginForm: {
-        backgroundColor: '#eee',
-        width: '80%',
-        height: '80%',
+    formContainer: {
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderRadius: 20,
+        padding: 20,
     },
     titleContainer: {
         flexDirection: 'row',

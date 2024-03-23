@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { globalStyles } from '../styles/global';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -35,106 +35,116 @@ export default function Register({ navigation }) {
 
     return (
         <View style={globalStyles.container}>
-            <View style={styles.formContainer}>
-                <View style={styles.titleContainer}>
-                    <Text style={styles.loginTitle}>Create Account</Text>
+            <ImageBackground source={require('../assets/auth_background.png')} style={styles.backgroundImage}>
+                <View style={styles.authContainer}>
+                    <View style={styles.formContainer}>
+                        <Formik
+                            initialValues={{ email: '', firstName: '', lastName: '', password: '', confirmPassword: '' }}
+                            validationSchema={reviewSchema}
+                            onSubmit={(values, actions) => {
+                                actions.resetForm();
+                                handleRegister(values);
+                            }}
+                            onReset={() => { }}
+                        >
+                            {props => (
+                                <View>
+                                    <View style={styles.titleContainer}>
+                                        <Text style={styles.loginTitle}>Create Account</Text>
+                                    </View>
+
+                                    <TextInput
+                                        style={globalStyles.input}
+                                        keyboardType="email-address"
+                                        placeholder='Email'
+                                        placeholderTextColor="#aaa"
+                                        onChangeText={props.handleChange('email')}
+                                        onBlur={props.handleBlur('email')}
+                                        value={props.values.email}
+                                    />
+                                    {/* only if the left value is a valid string, will the right value be displayed */}
+                                    <Text style={globalStyles.errorText}>{props.touched.email && props.errors.email}</Text>
+
+                                    <TextInput
+                                        style={globalStyles.input}
+                                        placeholder='First Name'
+                                        placeholderTextColor="#aaa"
+                                        onChangeText={props.handleChange('firstName')}
+                                        onBlur={props.handleBlur('firstName')}
+                                        value={props.values.firstName}
+                                    />
+                                    {/* only if the left value is a valid string, will the right value be displayed */}
+                                    <Text style={globalStyles.errorText}>{props.touched.firstName && props.errors.firstName}</Text>
+
+                                    <TextInput
+                                        style={globalStyles.input}
+                                        placeholder='Last Name'
+                                        placeholderTextColor="#aaa"
+                                        onChangeText={props.handleChange('lastName')}
+                                        onBlur={props.handleBlur('lastName')}
+                                        value={props.values.lastName}
+                                    />
+                                    {/* only if the left value is a valid string, will the right value be displayed */}
+                                    <Text style={globalStyles.errorText}>{props.touched.lastName && props.errors.lastName}</Text>
+
+                                    <View style={styles.passwordContainer}>
+                                        <TextInput
+                                            secureTextEntry={!showPassword}
+                                            value={props.values.password}
+                                            onChangeText={props.handleChange('password')}
+                                            style={styles.passwordInput}
+                                            placeholder="Password"
+                                            placeholderTextColor="#aaa"
+                                        />
+                                        <MaterialCommunityIcons
+                                            name={showPassword ? 'eye-off' : 'eye'}
+                                            size={24}
+                                            color="#aaa"
+                                            style={styles.icon}
+                                            onPress={toggleShowPassword}
+                                        />
+                                    </View>
+                                    {/* only if the left value is a valid string, will the right value be displayed */}
+                                    <Text style={globalStyles.errorText}>{props.touched.password && props.errors.password}</Text>
+
+                                    <TextInput
+                                        secureTextEntry
+                                        style={globalStyles.input}
+                                        placeholder='Confirm Password'
+                                        placeholderTextColor="#aaa"
+                                        onChangeText={props.handleChange('confirmPassword')}
+                                        onBlur={props.handleBlur('confirmPassword')}
+                                        value={props.values.confirmPassword}
+                                    />
+                                    {/* only if the left value is a valid string, will the right value be displayed */}
+                                    <Text style={globalStyles.errorText}>{props.touched.confirmPassword && props.errors.confirmPassword}</Text>
+
+                                    <FlatButton onPress={props.handleSubmit} text='register' />
+                                </View>
+                            )}
+                        </Formik>
+                    </View>
                 </View>
-                <Formik
-                    initialValues={{ email: '', firstName: '', lastName: '', password: '', confirmPassword: '' }}
-                    validationSchema={reviewSchema}
-                    onSubmit={(values, actions) => {
-                        actions.resetForm();
-                        handleRegister(values);
-                    }}
-                    onReset={() => { }}
-                >
-                    {props => (
-                        <View>
-                            <TextInput
-                                style={globalStyles.input}
-                                keyboardType="email-address"
-                                placeholder='Email'
-                                placeholderTextColor="#aaa"
-                                onChangeText={props.handleChange('email')}
-                                onBlur={props.handleBlur('email')}
-                                value={props.values.email}
-                            />
-                            {/* only if the left value is a valid string, will the right value be displayed */}
-                            <Text style={globalStyles.errorText}>{props.touched.email && props.errors.email}</Text>
-
-                            <TextInput
-                                style={globalStyles.input}
-                                placeholder='First Name'
-                                placeholderTextColor="#aaa"
-                                onChangeText={props.handleChange('firstName')}
-                                onBlur={props.handleBlur('firstName')}
-                                value={props.values.firstName}
-                            />
-                            {/* only if the left value is a valid string, will the right value be displayed */}
-                            <Text style={globalStyles.errorText}>{props.touched.firstName && props.errors.firstName}</Text>
-
-                            <TextInput
-                                style={globalStyles.input}
-                                placeholder='Last Name'
-                                placeholderTextColor="#aaa"
-                                onChangeText={props.handleChange('lastName')}
-                                onBlur={props.handleBlur('lastName')}
-                                value={props.values.lastName}
-                            />
-                            {/* only if the left value is a valid string, will the right value be displayed */}
-                            <Text style={globalStyles.errorText}>{props.touched.lastName && props.errors.lastName}</Text>
-
-                            <View style={styles.passwordContainer}>
-                                <TextInput
-                                    secureTextEntry={!showPassword}
-                                    value={props.values.password}
-                                    onChangeText={props.handleChange('password')}
-                                    style={styles.passwordInput}
-                                    placeholder="Password"
-                                    placeholderTextColor="#aaa"
-                                />
-                                <MaterialCommunityIcons
-                                    name={showPassword ? 'eye-off' : 'eye'}
-                                    size={24}
-                                    color="#aaa"
-                                    style={styles.icon}
-                                    onPress={toggleShowPassword}
-                                />
-                            </View>
-                            {/* only if the left value is a valid string, will the right value be displayed */}
-                            <Text style={globalStyles.errorText}>{props.touched.password && props.errors.password}</Text>
-
-                            <TextInput
-                                secureTextEntry
-                                style={globalStyles.input}
-                                placeholder='Confirm Password'
-                                placeholderTextColor="#aaa"
-                                onChangeText={props.handleChange('confirmPassword')}
-                                onBlur={props.handleBlur('confirmPassword')}
-                                value={props.values.confirmPassword}
-                            />
-                            {/* only if the left value is a valid string, will the right value be displayed */}
-                            <Text style={globalStyles.errorText}>{props.touched.confirmPassword && props.errors.confirmPassword}</Text>
-
-                            <FlatButton onPress={props.handleSubmit} text='register' />
-                        </View>
-                    )}
-                </Formik>
-            </View>
+            </ImageBackground>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    formContainer: {
+    backgroundImage: {
+        height: '100%',
+        width: '100%',
+    },
+    authContainer: {
         flex: 1,
         display: 'flex',
         justifyContent: 'center',
+        padding: 20,
     },
-    loginForm: {
-        backgroundColor: '#eee',
-        width: '80%',
-        height: '80%',
+    formContainer: {
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderRadius: 20,
+        padding: 20,
     },
     titleContainer: {
         flexDirection: 'row',
