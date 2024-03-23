@@ -37,6 +37,9 @@ export default function Register({ navigation }) {
         <View style={globalStyles.container}>
             <ImageBackground source={require('../assets/auth_background.png')} style={styles.backgroundImage}>
                 <View style={styles.authContainer}>
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.loginTitle}>Create Account</Text>
+                    </View>
                     <View style={styles.formContainer}>
                         <Formik
                             initialValues={{ email: '', firstName: '', lastName: '', password: '', confirmPassword: '' }}
@@ -49,10 +52,6 @@ export default function Register({ navigation }) {
                         >
                             {props => (
                                 <View>
-                                    <View style={styles.titleContainer}>
-                                        <Text style={styles.loginTitle}>Create Account</Text>
-                                    </View>
-
                                     <TextInput
                                         style={globalStyles.input}
                                         keyboardType="email-address"
@@ -153,6 +152,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     loginTitle: {
+        fontWeight: 'bold',
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: 40,

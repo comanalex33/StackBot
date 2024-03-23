@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     loginTitle: {
+        fontWeight: 'bold',
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: 40,
