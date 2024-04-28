@@ -5,6 +5,7 @@ import Login from './screens/login';
 import Register from './screens/register';
 import { createStackNavigator } from '@react-navigation/stack';
 import { globalStyles } from './styles/global';
+import Main from './screens/main';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ export default function App() {
         }}>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Main" component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
     // <View style={styles.container}>

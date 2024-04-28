@@ -25,7 +25,7 @@ export default function Login({ navigation }) {
     }
 
     const handleLogin = (values) => {
-        alert("User Logged in")
+        navigation.navigate("Main")
         // TODO - Call Login function
     }
 
