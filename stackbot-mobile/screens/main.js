@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { View, TouchableWithoutFeedback, Text, StyleSheet } from 'react-native';
+import { View, TouchableWithoutFeedback, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Buffer } from "buffer";
 import { FontAwesome } from '@expo/vector-icons';
 
 import secrets from '../secrets.json'
 import * as FileSystem from 'expo-file-system';
+
 import { Audio } from 'expo-av';
+import * as Speech from 'expo-speech';
 
 export default function Main() {
 
@@ -20,7 +22,11 @@ export default function Main() {
     // sleep time expects milliseconds
     function sleep(time) {
         return new Promise((resolve) => setTimeout(resolve, time));
-    }``
+    } ``
+
+    const speak = () => {
+        Speech.speak(message);
+    };
 
     async function startRecording() {
         // Requests permission when creating the recording session
@@ -154,6 +160,15 @@ export default function Main() {
                 </View>
             </TouchableWithoutFeedback>
             <Text style={recordingInProgress ? styles.statusTextProcessing : styles.statusTextDone}>{message}</Text>
+            <TouchableOpacity
+                onPress={speak}
+            >
+                <View>
+                    <View style={[styles.button, { backgroundColor: buttonColor }]}>
+                        <FontAwesome name="volume-up" size={30} color="#FFF" />
+                    </View>
+                </View>
+            </TouchableOpacity>
         </View>
     );
 }
