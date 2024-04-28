@@ -67,8 +67,6 @@ export default function Main() {
         const base64Data = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
         const binaryData = Buffer.from(base64Data, 'base64');
 
-        console.log(assemblyAiApiKey)
-
         // Firstly upload the audio online
         fetch('https://api.assemblyai.com/v2/upload', {
             method: 'POST',
@@ -98,7 +96,6 @@ export default function Main() {
                     .then(response => response.json())
                     .then(data => {
                         const transcriptId = data['id']
-                        console.log(transcriptId)
 
                         sleep(5000).then(() => {
                             getTranscript(transcriptId)
@@ -112,7 +109,6 @@ export default function Main() {
 
     function getTranscript(transcriptId) {
         const getUrl = `https://api.assemblyai.com/v2/transcript/${transcriptId}`
-        console.log(getUrl)
 
         fetch(getUrl, {
             method: 'GET',
