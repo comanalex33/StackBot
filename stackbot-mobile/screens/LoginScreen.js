@@ -15,7 +15,7 @@ const reviewSchema = yup.object({
         .min(4),
 });
 
-export default function Login({ navigation }) {
+export default function LoginScreen({ navigation }) {
 
     const [showPassword, setShowPassword] = useState(false);
     const toggleShowPassword = () => setShowPassword(!showPassword);

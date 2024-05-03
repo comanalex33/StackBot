@@ -4,7 +4,17 @@ import { SvgXml } from 'react-native-svg';
 import HouseCard from '../components/cards/HouseCard';
 import FloatingAddButton from '../components/FloatingAddButton';
 
-export default function Houses() {
+const HousesScreen = ({ navigation }) => {
+
+    const handleHouseClick = (name, description) => {
+
+        const houseData = {
+            name: name,
+            description: description
+        }
+
+        navigation.navigate("Rooms", { house: houseData })
+    }
 
     return (
         <View style={styles.container}>
@@ -24,7 +34,8 @@ export default function Houses() {
             </View>
             <SafeAreaView style={styles.content}>
                 <ScrollView contentInsetAdjustmentBehavior="automatic">
-                    <HouseCard name={"Alex's House"} description={"This is a simple description"}/>
+                    <HouseCard name={"Alex's House"} description={"This is a simple description"} 
+                        onPress={() => handleHouseClick("Alex's House", "This is a simple description")}/>
                     <HouseCard name={"Alex's House"} description={"This is a simple description"}/>
                 </ScrollView>
             </SafeAreaView>
@@ -137,3 +148,5 @@ const houseSvgXml = `
 </g>
 </svg>
 `
+
+export default HousesScreen;

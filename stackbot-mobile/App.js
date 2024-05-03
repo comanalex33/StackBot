@@ -1,12 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import Login from './screens/login';
-import Register from './screens/register';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { globalStyles } from './styles/global';
 import Main from './screens/main';
-import Houses from './screens/houses';
+import HousesScreen from './screens/HousesScreen';
 import HousesHeader from './components/headers/HousesHeader';
+import RoomsScreen from './screens/RoomsScreen';
+import RoomsHeader from './components/headers/RoomsHeader';
 
 const Stack = createStackNavigator();
 
@@ -16,17 +18,13 @@ export default function App() {
       <Stack.Navigator
         initialRouteName="Login"
       >
-        <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-        <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Main" component={Main} />
-        <Stack.Screen name="Houses" component={Houses} options={{ header: () => <HousesHeader /> }}/>
+        <Stack.Screen name="Houses" component={HousesScreen} options={{ header: () => <HousesHeader /> }}/>
+        <Stack.Screen name="Rooms" component={RoomsScreen} options={{ header: ({ route }) => <RoomsHeader route={route}/> }}/>
       </Stack.Navigator>
     </NavigationContainer>
-    // <View style={styles.container}>
-    //   <Text>Open up App.js to start working on your app!</Text>
-    //   <StatusBar style="auto" />
-    // </View>
-
   );
 }
 

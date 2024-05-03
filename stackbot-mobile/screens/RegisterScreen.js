@@ -22,7 +22,7 @@ const reviewSchema = yup.object({
         .required('Confirming password is required'),
 });
 
-export default function Register({ navigation }) {
+export default function RegisterScreen({ navigation }) {
 
     const [showPassword, setShowPassword] = useState(false);
     const toggleShowPassword = () => setShowPassword(!showPassword);
