@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Stackbot.DataAccess.Entities;
 using StackBot.Business.Interfaces;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Stackbot.DataAccess.Repositories
 {
@@ -40,6 +39,16 @@ namespace Stackbot.DataAccess.Repositories
         public async Task<ICollection<Item>> GetAllItems()
         {
             return await _context.Items.ToListAsync();
+        }
+
+        public async Task<ICollection<Item>> GetAllItemsByName(string itemName)
+        {
+            return await _context.Items.Where(i => i.Name.Contains(itemName)).ToListAsync();
+        }
+
+        public async Task<ICollection<Item>> GetAllItemsByStorageId(Guid storageId)
+        {
+            return await _context.Items.Where(i => i.StorageId == storageId).ToListAsync();
         }
 
         public async Task<Item> GetItemById(Guid itemId)
