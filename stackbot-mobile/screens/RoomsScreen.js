@@ -15,13 +15,21 @@ const data = [
     // Add more data as needed
 ];
 
-const RoomsScreen = ({ route }) => {
+const RoomsScreen = ({ route, navigation }) => {
 
     const { house } = route.params;
 
-    const getIcon = (description) => {
+    const handleRoomClick = (item) => {
+        const roomData = {
+            name: item.name,
+            description: item.description,
+            type: item.type
+        }
 
-        // let iconFile = roomIcons.other
+        navigation.navigate("RoomContent", { house: house, room: roomData })
+    }
+
+    const getIcon = (description) => {
 
         if(String(description).toLowerCase().includes('kitchen')) {
             return require('../assets/kitchen.png')
@@ -40,7 +48,7 @@ const RoomsScreen = ({ route }) => {
 
     const renderCard = ({ item }) => (
         <View style={styles.cardContainer}>
-            <RoomCard name={item.name} icon={getIcon(item.description + " " + item.name)}/>
+            <RoomCard name={item.name} icon={getIcon(item.description + " " + item.name)} onPress={() => handleRoomClick(item)}/>
         </View>
     );
 
