@@ -3,7 +3,7 @@ import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } 
 import { globalStyles } from '../styles/global';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import FlatButton from '../components/button';
+import FlatButton from '../components/Button';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const reviewSchema = yup.object({
