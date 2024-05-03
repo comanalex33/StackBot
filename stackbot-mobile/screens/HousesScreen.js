@@ -36,7 +36,8 @@ const HousesScreen = ({ navigation }) => {
                 <ScrollView contentInsetAdjustmentBehavior="automatic">
                     <HouseCard name={"Alex's House"} description={"This is a simple description"} 
                         onPress={() => handleHouseClick("Alex's House", "This is a simple description")}/>
-                    <HouseCard name={"Alex's House"} description={"This is a simple description"}/>
+                    <HouseCard name={"Alex's House"} description={"This is a simple description"}
+                        onPress={() => handleHouseClick("Alex's House", "This is a simple description")}/>
                 </ScrollView>
             </SafeAreaView>
             <FloatingAddButton />

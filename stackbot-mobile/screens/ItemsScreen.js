@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, FlatList } from 'react-native';
-import RoomCard from '../components/cards/RoomCard';
+import ItemCard from '../components/cards/ItemCard';
 
 import '../assets/fridge-item.png'
 import '../assets/deposit-item.png'
-import ItemCard from '../components/cards/ItemCard';
 
 const data = [
     { id: '1', name: 'Item 1', count: 1, warrantyDate: '12/13/2023', expirationDate: '12/13/2023', description: "Description for Item 1" },
@@ -14,9 +13,13 @@ const data = [
     // Add more data as needed
 ];
 
-const ItemsScreen = ({ route }) => {
+const ItemsScreen = ({ route, navigation }) => {
 
     const { house, room, space } = route.params;
+
+    const handleItemClick = (item) => {
+        navigation.navigate("ItemDetails", { house: house, room: room, space: space, item: item })
+    }
 
     const getIcon = () => {
 
@@ -29,7 +32,7 @@ const ItemsScreen = ({ route }) => {
 
     const renderCard = ({ item }) => (
         <View style={styles.cardContainer}>
-            <ItemCard name={item.name} icon={getIcon()}/>
+            <ItemCard name={item.name} icon={getIcon()} onPress={() => handleItemClick(item)}/>
         </View>
     );
 
