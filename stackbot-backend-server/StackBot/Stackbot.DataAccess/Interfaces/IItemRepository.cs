@@ -8,5 +8,6 @@ namespace StackBot.Business.Interfaces
         Task<Item> UpdateItemById(Item item);
         Task DeleteItemById(Guid itemId);
         Task<ICollection<Item>> GetAllItems();
+        Task<Item> GetItemById(Guid itemId);
     }
 }

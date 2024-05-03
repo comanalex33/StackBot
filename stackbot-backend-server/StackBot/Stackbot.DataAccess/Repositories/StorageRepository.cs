@@ -41,6 +41,18 @@ namespace Stackbot.DataAccess.Repositories
             return await _context.Storages.ToListAsync();
         }
 
+        public async Task<Storage> GetStorageByName(string storageName)
+        {
+            var getStorage = await _context.Storages.FirstOrDefaultAsync(s => s.Name == storageName);
+
+            if (getStorage == null)
+            {
+                throw new ApplicationException($"{storageName} does not exist");
+            }
+
+            return getStorage;
+        }
+
         public async Task<Storage> UpdateStorage(Storage storage)
         {
             var storageForUpdate = await _context.Items.FirstOrDefaultAsync(s => s.Id == storage.Id);

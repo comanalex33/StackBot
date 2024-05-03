@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Stackbot.DataAccess.Entities;
 using StackBot.Business.Interfaces;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Stackbot.DataAccess.Repositories
 {
@@ -39,6 +40,18 @@ namespace Stackbot.DataAccess.Repositories
         public async Task<ICollection<Item>> GetAllItems()
         {
             return await _context.Items.ToListAsync();
+        }
+
+        public async Task<Item> GetItemById(Guid itemId)
+        {
+            var getItem = await _context.Items.FirstOrDefaultAsync(i => i.Id == itemId);
+
+            if (getItem == null)
+            {
+                throw new ApplicationException($"{itemId} does not exist");
+            }
+
+            return getItem;
         }
 
         public async Task<Item> UpdateItemById(Item item)

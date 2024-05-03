@@ -8,5 +8,6 @@ namespace StackBot.Business.Interfaces
         Task<Storage> UpdateStorage(Storage storage);
         Task DeleteStorageById(Guid storageId);
         Task<ICollection<Storage>> GetAllStorages();
+        Task<Storage> GetStorageByName(string storageName);
     }
 }
