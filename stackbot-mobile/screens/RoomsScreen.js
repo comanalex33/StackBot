@@ -6,27 +6,24 @@ import '../assets/kitchen.png'
 import '../assets/double-bed.png'
 import '../assets/living-room.png'
 import '../assets/door.png'
+import StorageModel from '../models/StorageModel';
 
 const data = [
-    { id: '1', name: 'Living', description: 'living for Card 1' },
-    { id: '2', name: 'Bedroom Alex', description: 'Bedroom for Card 2' },
-    { id: '3', name: 'Kitchen', description: 'Kitchen for Card 3' },
-    { id: '4', name: 'Storage Closet', description: 'Description for Card 4' },
+    { id: '1', name: "Living", type: 'room', description: 'Living Room for Room 1', storageId: null },
+    { id: '2', name: "Bedroom Alex", type: 'room', description: 'Bedroom for Room 2', storageId: null },
+    { id: '3', name: "Kitchen", type: 'room', description: 'Kitchen for Room 3', storageId: null },
+    { id: '4', name: "Storage Closet", type: 'room', description: 'Description for Room 4', storageId: null },
     // Add more data as needed
 ];
 
 const RoomsScreen = ({ route, navigation }) => {
 
     const { house } = route.params;
+    const houseModel = new StorageModel(house)
 
     const handleRoomClick = (item) => {
-        const roomData = {
-            name: item.name,
-            description: item.description,
-            type: item.type
-        }
-
-        navigation.navigate("RoomContent", { house: house, room: roomData })
+        const room = new StorageModel(item)
+        navigation.navigate("RoomContent", { house: houseModel, room: room })
     }
 
     const getIcon = (description) => {

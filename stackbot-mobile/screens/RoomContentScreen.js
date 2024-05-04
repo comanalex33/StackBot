@@ -4,27 +4,25 @@ import RoomCard from '../components/cards/RoomCard';
 
 import '../assets/fridge.png'
 import '../assets/boxes.png'
+import StorageModel from '../models/StorageModel';
 
 const data = [
-    { id: '1', name: 'Fridge', type: 'fridge', description: 'living for Card 1' },
-    { id: '2', name: 'Deposit 1', type: 'deposit', description: 'Bedroom for Card 2' },
-    { id: '3', name: 'Deposit 2', type: 'deposit', description: 'Kitchen for Card 3' },
-    { id: '4', name: 'Deposit 3', type: 'deposit', description: 'Description for Card 4' },
+    { id: '1', name: 'Fridge', type: 'fridge', description: 'living for Card 1', storageId: null },
+    { id: '2', name: 'Deposit 1', type: 'deposit', description: 'Bedroom for Card 2', storageId: null },
+    { id: '3', name: 'Deposit 2', type: 'deposit', description: 'Kitchen for Card 3', storageId: null },
+    { id: '4', name: 'Deposit 3', type: 'deposit', description: 'Description for Card 4', storageId: null },
     // Add more data as needed
 ];
 
 const RoomContentScreen = ({ route, navigation }) => {
 
     const { house, room } = route.params;
+    const houseModel = new StorageModel(house)
+    const roomModel = new StorageModel(room)
 
     const handleSpaceClick = (item) => {
-        const spaceData = {
-            name: item.name,
-            description: item.description,
-            type: item.type
-        }
-
-        navigation.navigate("Items", { house: house, room: room, space: spaceData })
+        const space = new StorageModel(item)
+        navigation.navigate("Items", { house: houseModel, room: roomModel, space: space })
     }
 
     const getIcon = (type) => {

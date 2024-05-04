@@ -4,10 +4,16 @@ import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import '../assets/fridge-item.png'
 import '../assets/deposit-item.png'
 import ItemDetailCard from '../components/cards/ItemDetailCard';
+import ItemModel from '../models/ItemModel';
+import StorageModel from '../models/StorageModel';
 
 const ItemDetailsScreen = ({ route }) => {
 
     const { house, room, space, item } = route.params;
+    const houseModel = new StorageModel(house)
+    const roomModel = new StorageModel(room)
+    const spaceModel = new StorageModel(space)
+    const itemModel = new ItemModel(item)
 
     const getIcon = () => {
 
@@ -26,20 +32,20 @@ const ItemDetailsScreen = ({ route }) => {
                 </View>
                 <View style={styles.headerDescriptionContainer}>
                     <View style={styles.headerDescription}>
-                        <Text style={styles.headerTitleText}>{item.name}</Text>
-                        <Text style={styles.headerDescriptionText}>{item.description}</Text>
+                        <Text style={styles.headerTitleText}>{itemModel.getName()}</Text>
+                        <Text style={styles.headerDescriptionText}>{itemModel.getDescription()}</Text>
                     </View>
                 </View>
             </View>
             <View style={styles.content}>
-                <ItemDetailCard title={"Count"} value={item.count} />
+                <ItemDetailCard title={"Count"} value={itemModel.getCount()} />
                 {(space.type === 'fridge') ?
-                    <ItemDetailCard title={"Expiration Date"} value={item.expirationDate} />
+                    <ItemDetailCard title={"Expiration Date"} value={itemModel.getExpirationDate()} />
                     :
-                    <ItemDetailCard title={"Warranty Date"} value={item.warrantyDate} />
+                    <ItemDetailCard title={"Warranty Date"} value={itemModel.getWarrantyDate()} />
                 }
-                <ItemDetailCard title={"House"} value={house.name} />
-                <ItemDetailCard title={"Location"} value={room.name + " > " + space.name} />
+                <ItemDetailCard title={"House"} value={houseModel.getName()} />
+                <ItemDetailCard title={"Location"} value={roomModel.getName() + " > " + spaceModel.getName()} />
             </View>
             <View style={styles.controls}>
                 <TouchableOpacity>

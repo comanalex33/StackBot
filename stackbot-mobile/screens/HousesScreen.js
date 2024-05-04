@@ -1,20 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, View, StyleSheet, Text } from 'react-native';
+import { SafeAreaView, ScrollView, View, StyleSheet, Text, FlatList } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import HouseCard from '../components/cards/HouseCard';
-import FloatingAddButton from '../components/FloatingAddButton';
+import FloatingAddButton from '../components/buttons/FloatingAddButton';
+import AddHouseDialog from '../components/dialogs/AddHouseDialog';
+import StorageModel from '../models/StorageModel';
+
+const houses = [
+    { id: '1', name: "Alex's House", type: 'house', description: 'Description for House 1', storageId: null },
+    { id: '2', name: "David's House", type: 'house', description: 'Description for House 2', storageId: null },
+    // Add more data as needed
+];
 
 const HousesScreen = ({ navigation }) => {
 
-    const handleHouseClick = (name, description) => {
+    const [dialogVisible, setDialogVisible] = useState(false);
 
-        const houseData = {
-            name: name,
-            description: description
-        }
+    const toggleDialog = () => {
+        setDialogVisible(!dialogVisible);
+    };
 
-        navigation.navigate("Rooms", { house: houseData })
+    const handleHouseClick = (item) => {
+        const house = new StorageModel(item);
+        navigation.navigate("Rooms", { house: house })
     }
+
+    const renderCard = ({ item }) => (
+        <View style={styles.cardContainer}>
+            <HouseCard name={item.name} description={item.description} onPress={() => handleHouseClick(item)}/>
+        </View>
+    );
 
     return (
         <View style={styles.container}>
@@ -32,15 +47,26 @@ const HousesScreen = ({ navigation }) => {
                     <SvgXml xml={houseSvgXml} width="100%" height="100%" />
                 </View>
             </View>
-            <SafeAreaView style={styles.content}>
+            <FlatList
+                style={styles.content}
+                data={houses}
+                renderItem={renderCard}
+                keyExtractor={item => item.id}
+                contentContainerStyle={styles.flatListContainer}
+                numColumns={1} // Display two cards per row
+            />
+            {/* <SafeAreaView style={styles.content}>
                 <ScrollView contentInsetAdjustmentBehavior="automatic">
-                    <HouseCard name={"Alex's House"} description={"This is a simple description"} 
-                        onPress={() => handleHouseClick("Alex's House", "This is a simple description")}/>
                     <HouseCard name={"Alex's House"} description={"This is a simple description"}
-                        onPress={() => handleHouseClick("Alex's House", "This is a simple description")}/>
+                        onPress={() => handleHouseClick("Alex's House", "This is a simple description")} />
+                    <HouseCard name={"Alex's House"} description={"This is a simple description"}
+                        onPress={() => handleHouseClick("Alex's House", "This is a simple description")} />
                 </ScrollView>
-            </SafeAreaView>
-            <FloatingAddButton />
+            </SafeAreaView> */}
+            <FloatingAddButton onPress={toggleDialog} />
+
+            {/* Add House Dialog */}
+            <AddHouseDialog visible={dialogVisible} onClose={toggleDialog} />
         </View>
     )
 }
@@ -91,7 +117,15 @@ const styles = StyleSheet.create({
     content: {
         flex: 0.65,
         padding: 10
-    }
+    },
+    flatListContainer: {
+        paddingHorizontal: 10,
+    },
+    cardContainer: {
+        flex: 1,
+        paddingHorizontal: 5,
+        marginBottom: 10,
+    },
 });
 
 const houseSvgXml = `

@@ -4,21 +4,27 @@ import ItemCard from '../components/cards/ItemCard';
 
 import '../assets/fridge-item.png'
 import '../assets/deposit-item.png'
+import StorageModel from '../models/StorageModel';
+import ItemModel from '../models/ItemModel';
 
 const data = [
-    { id: '1', name: 'Item 1', count: 1, warrantyDate: '12/13/2023', expirationDate: '12/13/2023', description: "Description for Item 1" },
-    { id: '2', name: 'Item 2', count: 4, warrantyDate: '12/13/2023', expirationDate: '12/13/2023', description: "Description for Item 2" },
-    { id: '3', name: 'Item 3', count: 1, warrantyDate: '12/13/2023', expirationDate: '12/13/2023', description: "Description for Item 3" },
-    { id: '4', name: 'Item 4', count: 3, warrantyDate: '12/13/2023', expirationDate: '12/13/2023', description: "Description for Item 4" },
+    { id: '1', name: 'Item 1', count: 1, warrantyDate: '12/13/2023', expirationDate: '12/13/2023', description: "Description for Item 1", storageId: null },
+    { id: '2', name: 'Item 2', count: 4, warrantyDate: '12/13/2023', expirationDate: '12/13/2023', description: "Description for Item 2", storageId: null },
+    { id: '3', name: 'Item 3', count: 1, warrantyDate: '12/13/2023', expirationDate: '12/13/2023', description: "Description for Item 3", storageId: null },
+    { id: '4', name: 'Item 4', count: 3, warrantyDate: '12/13/2023', expirationDate: '12/13/2023', description: "Description for Item 4", storageId: null },
     // Add more data as needed
 ];
 
 const ItemsScreen = ({ route, navigation }) => {
 
     const { house, room, space } = route.params;
+    const houseModel = new StorageModel(house)
+    const roomModel = new StorageModel(room)
+    const spaceModel = new StorageModel(space)
 
     const handleItemClick = (item) => {
-        navigation.navigate("ItemDetails", { house: house, room: room, space: space, item: item })
+        const itemModel = new ItemModel(item)
+        navigation.navigate("ItemDetails", { house: houseModel, room: roomModel, space: spaceModel, item: itemModel })
     }
 
     const getIcon = () => {

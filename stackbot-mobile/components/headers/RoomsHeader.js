@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AddRoomDialog from '../dialogs/AddRoomDialog';
+import StorageModel from '../../models/StorageModel';
+import MembersDialog from '../dialogs/MembersDialog';
 
 const RoomsHeader = ({ route }) => {
 
     const { house } = route.params;
+    const houseModel = new StorageModel(house)
+
+    const [addRoomDialogVisible, setAddRoomDialogVisible] = useState(false);
+    const [membersDialogVisible, setMembersDialogVisible] = useState(false)
+
+    const toggleAddRoomDialog = () => {
+        setAddRoomDialogVisible(!addRoomDialogVisible);
+    }
+
+    const toggleMembersDialog = () => {
+        setMembersDialogVisible(!membersDialogVisible)
+    }
 
     return (
         <View style={styles.header}>
@@ -20,21 +35,27 @@ const RoomsHeader = ({ route }) => {
             </View>
             <View style={styles.headerRightContainer}>
                 <View style={styles.headerTitleContainer}>
-                    <Text style={styles.headerTitle}>{house.name}</Text>
+                    <Text style={styles.headerTitle}>{houseModel.getName()}</Text>
                 </View>
                 <View style={styles.headerControlsContainer}>
-                    <TouchableOpacity>
-                        <View style={styles.button} backgroundColor="red" paddingHorizontal={5}>
+                    <TouchableOpacity onPress={toggleAddRoomDialog}>
+                        <View style={styles.button} backgroundColor="blue" paddingHorizontal={5}>
                             <Text style={styles.buttonText}>+ Add Room</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={toggleMembersDialog}>
                         <View style={styles.button} backgroundColor="gray">
-                        <MaterialCommunityIcons name="account-group" size={25} color="white" paddingHorizontal={30} />
+                            <MaterialCommunityIcons name="account-group" size={25} color="white" paddingHorizontal={30} />
                         </View>
                     </TouchableOpacity>
                 </View>
             </View>
+
+            {/* Add Room Dialog */}
+            <AddRoomDialog visible={addRoomDialogVisible} onClose={toggleAddRoomDialog}/>
+
+            {/* See Members Dialog */}
+            <MembersDialog visible={membersDialogVisible} onClose={toggleMembersDialog}/>
         </View>
     );
 };
