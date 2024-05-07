@@ -68,5 +68,26 @@ namespace Stackbot.DataAccess.Repositories
 
             return storage;
         }
+
+        public async Task<int> CountStoragesWithTheSameName(string storageName)
+        {
+            var getStorages = await _context.Storages.Where(s => s.Name == storageName).ToListAsync();
+            
+            return getStorages.Count;
+        }
+
+        public async Task<ICollection<Storage>> GetHousesByUserId(Guid userId)
+        {
+            var getStorages = await _context.Storages.Where(s => s.UserStorages.Any(u => u.UserId == userId)).ToListAsync();
+
+            return getStorages;
+        }
+
+        public async Task<ICollection<Storage>> GetStoragesByParentId(Guid parentId)
+        {
+            var getStorages = await _context.Storages.Where(s => s.ParentStorage.Id == parentId).ToListAsync();
+
+            return getStorages;
+        }
     }
 }
