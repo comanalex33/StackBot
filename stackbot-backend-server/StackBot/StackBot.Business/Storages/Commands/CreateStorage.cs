@@ -31,6 +31,6 @@ namespace StackBot.Business.Storages.Commands
             await _storageRepository.CreateStorage(storage);
 
             return StorageResponseDto.FromStorage(storage);
-        }    
+        }
     }
 }

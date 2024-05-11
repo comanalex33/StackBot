@@ -4,7 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Stackbot.DataAccess;
 using Stackbot.DataAccess.Entities;
+using Stackbot.DataAccess.Repositories;
 using StackBot.Api.Options;
+using StackBot.Business.Interfaces;
 using System.Text;
 
 namespace StackBot.Api.Extensions
@@ -94,6 +96,18 @@ namespace StackBot.Api.Extensions
             });
 
             return services;
+        }
+
+        public static void AddMediatR(this IServiceCollection services)
+        {
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IUserRepository).Assembly));
+        }
+
+        public static void AddRepositories(this IServiceCollection services)
+        {
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IStorageRepository, StorageRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
         }
     }
 }

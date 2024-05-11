@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Stackbot.DataAccess.Entities;
+using Stackbot.DataAccess.Exceptions;
 using StackBot.Business.Interfaces;
 
 namespace Stackbot.DataAccess.Repositories
@@ -7,18 +9,28 @@ namespace Stackbot.DataAccess.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public UserRepository(AppDbContext context)
+        public UserRepository(AppDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        public async Task<User> CreateUser(User user)
+        public async Task<User> CreateUser(User user, string password)
         {
-            _context.Users.Add(user);
+            var existingIdentity = await _userManager.FindByEmailAsync(user.UserName);
+            if (existingIdentity != null)
+            {
+                throw new UserAlreadyExistsException(user.UserName);
+            }
 
-            await _context.SaveChangesAsync();
+            var result = await _userManager.CreateAsync(user, password);
 
+            if (!result.Succeeded)
+            {
+                throw new Exception("User creation failed: " + result.Errors.FirstOrDefault()?.Description);
+            }
             return user;
         }
 
