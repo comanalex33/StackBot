@@ -7,10 +7,10 @@
         public EntityAlreadyExistsException()
             : base() { }
 
-        public EntityAlreadyExistsException(string entityType, long entityId)
+        public EntityAlreadyExistsException(string entityType, Guid entityId)
             : base(string.Format(MessageTemplate, entityType, entityId)) { }
 
-        public EntityAlreadyExistsException(string entityType, long entityId, Exception innerException)
+        public EntityAlreadyExistsException(string entityType, Guid entityId, Exception innerException)
             : base(string.Format(MessageTemplate, entityType, entityId), innerException) { }
     }
 }

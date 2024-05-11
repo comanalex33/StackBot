@@ -1,8 +1,11 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StackBot.Api.Models;
 using StackBot.Business.Dtos.UserDtos;
 using StackBot.Business.Users.Commands;
+using StackBot.Business.Users.Queries;
 
 namespace StackBot.Api.Controllers
 {
@@ -43,6 +46,17 @@ namespace StackBot.Api.Controllers
                 Token = response
             };
             return Ok(authenticationResult);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetUserById(Guid id)
+        {
+            var query = new GetUserById(id);
+            var response = await _mediator.Send(query);
+
+            return Ok(response);
         }
     }
 }

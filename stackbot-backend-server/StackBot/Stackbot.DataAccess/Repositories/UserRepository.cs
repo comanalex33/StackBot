@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Stackbot.DataAccess.Exceptions;
 using StackBot.Business.Interfaces;
 using StackBot.Domain.Entities;
-using System.Security.Authentication;
 
 namespace Stackbot.DataAccess.Repositories
 {
@@ -32,7 +31,7 @@ namespace Stackbot.DataAccess.Repositories
 
             if (!result.Succeeded)
             {
-                throw new Exception("User creation failed: " + result.Errors.FirstOrDefault()?.Description);
+                throw new Exception("User creation failed!");
             }
             return user;
         }
@@ -55,32 +54,24 @@ namespace Stackbot.DataAccess.Repositories
             return identityUser;
         }
 
-        public async Task DeleteUser(Guid userId)
+        public async Task<User> GetUserById(Guid userId)
         {
-            var userForDelete = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-
-            if (userForDelete == null)
-            {
-                throw new ApplicationException("User not found!");
-            }
-
-            _context.Users.Remove(userForDelete);
-
-            await _context.SaveChangesAsync();
+            //return await _userManager.FindByIdAsync(userId.ToString());
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new EntityNotFoundException("User", userId);
         }
 
-        public async Task<ICollection<User>> GetAllUsers()
+        /*public async Task<ICollection<User>> GetAllUsers()
         {
             return await _context.Users.ToListAsync();
-        }
+        }*/
 
         public async Task<User> UpdateUser(User user)
         {
-            var userForUpdate = await _context.Items.FirstOrDefaultAsync(u => u.Id == user.Id);
+            var userForUpdate = await _context.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
 
             if (userForUpdate == null)
             {
-                throw new ApplicationException("User not found!");
+                throw new EntityNotFoundException("User", user.Id);
             }
 
             _context.Users.Update(user);
@@ -88,6 +79,23 @@ namespace Stackbot.DataAccess.Repositories
             await _context.SaveChangesAsync();
 
             return user;
+        }
+
+        public async Task DeleteUser(Guid userId)
+        {
+            var userToDelete = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (userToDelete == null)
+            {
+                throw new EntityNotFoundException("User", userId);
+            }
+
+            var result = await _userManager.DeleteAsync(userToDelete);
+
+            if (!result.Succeeded)
+            {
+                throw new ApplicationException("User deletion failed!");
+            }
         }
     }
 }

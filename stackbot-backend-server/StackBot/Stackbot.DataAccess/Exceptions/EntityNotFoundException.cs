@@ -7,10 +7,10 @@
         public EntityNotFoundException()
             : base() { }
 
-        public EntityNotFoundException(string entityType, long entityId)
+        public EntityNotFoundException(string entityType, Guid entityId)
             : base(string.Format(MessageTemplate, entityType, entityId)) { }
 
-        public EntityNotFoundException(string entityType, long entityId, Exception innerException)
+        public EntityNotFoundException(string entityType, Guid entityId, Exception innerException)
             : base(string.Format(MessageTemplate, entityType, entityId), innerException) { }
     }
 }
