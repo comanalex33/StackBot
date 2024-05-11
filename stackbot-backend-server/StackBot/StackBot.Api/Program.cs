@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Stackbot.DataAccess;
 using StackBot.Api.Extensions;
+using StackBot.Api.Middleware;
 using StackBot.Api.Models;
 using StackBot.Api.Options;
 using StackBot.Business.Services;
@@ -63,6 +64,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Custom Exception middleware
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
