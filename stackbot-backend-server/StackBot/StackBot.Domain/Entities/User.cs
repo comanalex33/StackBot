@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Stackbot.Domain.Entities;
 
-namespace Stackbot.DataAccess.Entities
+namespace StackBot.Domain.Entities
 {
     public class User : IdentityUser<Guid>
     {

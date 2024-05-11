@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StackBot.Api.Models;
 using StackBot.Business.Dtos.UserDtos;
 using StackBot.Business.Users.Commands;
 
@@ -17,12 +18,31 @@ namespace StackBot.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(RegisterUserRequestDto user)
+        [Route("register")]
+        public async Task<IActionResult> Register(RegisterUserDto user)
         {
             var command = new RegisterUser(user);
             var response = await _mediator.Send(command);
 
-            return Ok(response);
+            var authenticationResult = new AuthenticationResult()
+            {
+                Token = response
+            };
+            return Ok(authenticationResult);
+        }
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login(LoginUserDto userInfo)
+        {
+            var command = new LoginUser(userInfo);
+            var response = await _mediator.Send(command);
+
+            var authenticationResult = new AuthenticationResult()
+            {
+                Token = response
+            };
+            return Ok(authenticationResult);
         }
     }
 }

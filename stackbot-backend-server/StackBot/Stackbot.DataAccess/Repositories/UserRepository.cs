@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Stackbot.DataAccess.Entities;
 using Stackbot.DataAccess.Exceptions;
 using StackBot.Business.Interfaces;
+using StackBot.Domain.Entities;
+using System.Security.Authentication;
 
 namespace Stackbot.DataAccess.Repositories
 {
@@ -10,14 +11,16 @@ namespace Stackbot.DataAccess.Repositories
     {
         private readonly AppDbContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public UserRepository(AppDbContext context, UserManager<User> userManager)
+        public UserRepository(AppDbContext context, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _context = context;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        public async Task<User> CreateUser(User user, string password)
+        public async Task<User> RegisterUser(User user, string password)
         {
             var existingIdentity = await _userManager.FindByEmailAsync(user.UserName);
             if (existingIdentity != null)
@@ -32,6 +35,24 @@ namespace Stackbot.DataAccess.Repositories
                 throw new Exception("User creation failed: " + result.Errors.FirstOrDefault()?.Description);
             }
             return user;
+        }
+
+        public async Task<User> LoginUser(string email, string password)
+        {
+            var identityUser = await _userManager.FindByEmailAsync(email);
+            if (identityUser == null)
+            {
+                throw new InvalidCredentialsException();
+            }
+
+            var result = await _signInManager.CheckPasswordSignInAsync(identityUser, password, false);
+
+            if (!result.Succeeded)
+            {
+                throw new InvalidCredentialsException();
+            }
+
+            return identityUser;
         }
 
         public async Task DeleteUser(Guid userId)

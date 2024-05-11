@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Stackbot.DataAccess.Entities;
 using StackBot.Business.Dtos.StorageDtos;
 using StackBot.Business.Interfaces;
+using StackBot.Domain.Entities;
 
 namespace StackBot.Business.Storages.Commands
 {

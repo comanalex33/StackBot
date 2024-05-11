@@ -1,6 +1,6 @@
 ﻿namespace StackBot.Business.Dtos.UserDtos
 {
-    public class RegisterUserRequestDto
+    public class RegisterUserDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

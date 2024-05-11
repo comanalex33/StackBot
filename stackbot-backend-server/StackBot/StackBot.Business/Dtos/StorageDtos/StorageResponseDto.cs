@@ -1,5 +1,5 @@
-﻿using Stackbot.DataAccess.Entities;
-using Stackbot.DataAccess.Enums;
+﻿using StackBot.Domain.Entities;
+using StackBot.Domain.Enums;
 
 namespace StackBot.Business.Dtos.StorageDtos
 {

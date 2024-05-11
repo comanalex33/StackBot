@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using Stackbot.DataAccess.Repositories;
-using StackBot.Business.Dtos.StorageDtos;
 using StackBot.Business.Interfaces;
 
 namespace StackBot.Business.Storages.Commands

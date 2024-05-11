@@ -1,4 +1,4 @@
-﻿using Stackbot.DataAccess.Enums;
+﻿using StackBot.Domain.Enums;
 
 namespace StackBot.Business.Dtos.StorageDtos
 {

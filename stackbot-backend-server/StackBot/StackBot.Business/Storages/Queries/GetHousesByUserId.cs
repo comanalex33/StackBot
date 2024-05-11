@@ -1,9 +1,6 @@
 ﻿using MediatR;
-using Stackbot.DataAccess.Entities;
-using StackBot.Business.Dtos.ItemDtos;
 using StackBot.Business.Dtos.StorageDtos;
 using StackBot.Business.Interfaces;
-using System.Diagnostics.Contracts;
 
 namespace StackBot.Business.Storages.Queries
 {

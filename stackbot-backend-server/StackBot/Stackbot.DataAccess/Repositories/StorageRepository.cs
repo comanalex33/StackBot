@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Stackbot.DataAccess.Entities;
 using StackBot.Business.Interfaces;
+using StackBot.Domain.Entities;
 
 namespace Stackbot.DataAccess.Repositories
 {

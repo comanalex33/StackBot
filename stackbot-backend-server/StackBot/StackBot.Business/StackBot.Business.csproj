@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Stackbot.DataAccess\Stackbot.DataAccess.csproj" />
+    <ProjectReference Include="..\StackBot.Domain\StackBot.Domain.csproj" />
   </ItemGroup>
 
 </Project>

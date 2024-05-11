@@ -1,4 +1,4 @@
-﻿namespace Stackbot.DataAccess.Entities
+﻿namespace StackBot.Domain.Entities
 {
     public class Item
     {

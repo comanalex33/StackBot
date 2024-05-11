@@ -1,4 +1,4 @@
-﻿using Stackbot.DataAccess.Entities;
+﻿using StackBot.Domain.Entities;
 
 namespace StackBot.Business.Dtos.ItemDtos
 {

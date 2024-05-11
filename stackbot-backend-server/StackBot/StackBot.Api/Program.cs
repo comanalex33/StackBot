@@ -1,16 +1,12 @@
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Stackbot.DataAccess;
-using Stackbot.DataAccess.Entities;
-using Stackbot.DataAccess.Repositories;
 using StackBot.Api.Extensions;
 using StackBot.Api.Models;
 using StackBot.Api.Options;
-using StackBot.Business.Interfaces;
 using StackBot.Business.Services;
-using StackBot.Business.Users.Commands;
+using StackBot.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

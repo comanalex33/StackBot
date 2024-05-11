@@ -1,14 +1,14 @@
 ﻿using MediatR;
-using Stackbot.DataAccess.Entities;
 using StackBot.Business.Dtos.UserDtos;
 using StackBot.Business.Interfaces;
 using StackBot.Business.Services;
+using StackBot.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace StackBot.Business.Users.Commands
 {
-    public record RegisterUser(RegisterUserRequestDto registerUserDto) : IRequest<string>;
+    public record RegisterUser(RegisterUserDto registerUserDto) : IRequest<string>;
 
     public class RegisterUserHandler : IRequestHandler<RegisterUser, string>
     {
@@ -31,14 +31,14 @@ namespace StackBot.Business.Users.Commands
                 LastName = request.registerUserDto.LastName
             };
 
-            var createdUser = await _userRepository.CreateUser(user, request.registerUserDto.Password);
+            var createdUser = await _userRepository.RegisterUser(user, request.registerUserDto.Password);
 
             var claimsIdentity = new ClaimsIdentity(new Claim[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, createdUser.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, createdUser.Email),
-                new Claim("Id", createdUser.Id.ToString())
+                new Claim("userId", createdUser.Id.ToString())
             });
 
             var token = _identityService.CreateSecurityToken(claimsIdentity);

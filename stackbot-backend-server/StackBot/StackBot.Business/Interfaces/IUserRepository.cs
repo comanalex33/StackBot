@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Stackbot.DataAccess.Entities;
+﻿using StackBot.Domain.Entities;
 
 namespace StackBot.Business.Interfaces
 {
     public interface IUserRepository
     {
-        Task<User> CreateUser(User user, string password);
+        Task<User> RegisterUser(User user, string password);
+        Task<User> LoginUser(string email, string password);
         Task<User> UpdateUser(User user);
         Task DeleteUser(Guid userId);
         Task<ICollection<User>> GetAllUsers();

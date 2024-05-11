@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Stackbot.DataAccess;
-using Stackbot.DataAccess.Entities;
 using Stackbot.DataAccess.Repositories;
 using StackBot.Api.Options;
 using StackBot.Business.Interfaces;
+using StackBot.Domain.Entities;
 using System.Text;
 
 namespace StackBot.Api.Extensions

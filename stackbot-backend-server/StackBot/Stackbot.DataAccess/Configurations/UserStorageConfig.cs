@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Stackbot.DataAccess.Entities;
+using Stackbot.Domain.Entities;
 
 namespace Stackbot.DataAccess.Configurations
 {
