@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { Text, StyleSheet, TextInput, View, TouchableOpacity, Button } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
 import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import StorageModel from '../../models/StorageModel';
 import StorageTypes from '../../models/StorageTypes';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import DateButton from '../buttons/DateButton';
@@ -22,32 +21,34 @@ const validationSchema = Yup.object({
         .required('Date is required').nullable()
 });
 
-const AddItemDialog = ({ visible, onClose, spaceType, spaceId }) => {
+const ModifyItemDialog = ({ item, visible, onClose, spaceType }) => {
 
-    // const [date, setDate] = useState(new Date());
-
-    const handleCreateItem = (name, description, count, date) => {
-        const item = new ItemModel({
+    const handleUpdateItem = (name, description, count, date) => {
+        const updatedItem = new ItemModel({
+            id: item.id,
             name: name,
             description: description,
             count: Number(count),
-            expirationDate: ( spaceType === StorageTypes.Fridge ) ? date : null,
-            warrantyDate: ( spaceType === StorageTypes.Deposit ) ? date : null,
-            storageId: spaceId
+            expirationDate: ( spaceType === StorageTypes.Fridge ) ? date : item.expirationDate,
+            warrantyDate: ( spaceType === StorageTypes.Deposit ) ? date : item.warrantyDate,
+            storageId: item.storageId
         })
 
-        // TODO - Handle Item creation
-        console.log(item)
+        // TODO - Handle Item update
+        if(!updatedItem.isEqual(item)) {
+            console.log("Somehting changed")
+            console.log(updatedItem)
+        }
     }
 
     return (
         <CustomDialog visible={visible} onClose={onClose}>
-            <Text style={styles.title}>Add Item</Text>
+            <Text style={styles.title}>Modify Item</Text>
             <Formik
-                initialValues={{ name: '', description: '', count: '1', date: null }}
+                initialValues={{ name: item.name, description: item.description, count: String(item.count), date: ( spaceType === StorageTypes.Fridge ) ? item.expirationDate : item.warrantyDate }}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    handleCreateItem(values.name, values.description, values.count, values.date)
+                    handleUpdateItem(values.name, values.description, values.count, values.date)
                     onClose(); // Close the dialog on successful submission
                 }}
             >
@@ -92,7 +93,7 @@ const AddItemDialog = ({ visible, onClose, spaceType, spaceId }) => {
                             </View>
                             <DateButton text={ values.date === null ? "-" : formatDate(values.date)} onPress={() => {
                                 DateTimePickerAndroid.open({
-                                    value: values.date === null ? new Date() : values.date,
+                                    value: values.date === null ? new Date() : new Date(values.date),
                                     onChange: (event, selectedDate) => {
                                         setFieldValue('date', selectedDate || values.date);
                                     },
@@ -174,4 +175,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddItemDialog;
+export default ModifyItemDialog;

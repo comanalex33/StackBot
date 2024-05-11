@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, View, StyleSheet, Text, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, FlatList } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; // Importing icons from Expo Icons
 import { SvgXml } from 'react-native-svg';
 import HouseCard from '../components/cards/HouseCard';
 import FloatingAddButton from '../components/buttons/FloatingAddButton';
@@ -27,7 +28,7 @@ const HousesScreen = ({ navigation }) => {
 
     const renderCard = ({ item }) => (
         <View style={styles.cardContainer}>
-            <HouseCard name={item.name} description={item.description} onPress={() => handleHouseClick(item)}/>
+            <HouseCard house={item} onPress={() => handleHouseClick(item)} />
         </View>
     );
 
@@ -47,6 +48,10 @@ const HousesScreen = ({ navigation }) => {
                     <SvgXml xml={houseSvgXml} width="100%" height="100%" />
                 </View>
             </View>
+            <View style={styles.infoContainer}>
+                <MaterialCommunityIcons name="information-outline" size={25} color="black" />
+                <Text style={styles.infoText}>Long press on cards to activate controls</Text>
+            </View>
             <FlatList
                 style={styles.content}
                 data={houses}
@@ -55,14 +60,7 @@ const HousesScreen = ({ navigation }) => {
                 contentContainerStyle={styles.flatListContainer}
                 numColumns={1} // Display two cards per row
             />
-            {/* <SafeAreaView style={styles.content}>
-                <ScrollView contentInsetAdjustmentBehavior="automatic">
-                    <HouseCard name={"Alex's House"} description={"This is a simple description"}
-                        onPress={() => handleHouseClick("Alex's House", "This is a simple description")} />
-                    <HouseCard name={"Alex's House"} description={"This is a simple description"}
-                        onPress={() => handleHouseClick("Alex's House", "This is a simple description")} />
-                </ScrollView>
-            </SafeAreaView> */}
+
             <FloatingAddButton onPress={toggleDialog} />
 
             {/* Add House Dialog */}
@@ -126,6 +124,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         marginBottom: 10,
     },
+
+    infoContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fbfc9d',
+        margin: 10,
+        borderRadius: 10,
+        borderWidth: 0.3,
+        paddingStart: 20
+    },
+    infoText: {
+        marginStart: 10
+    }
 });
 
 const houseSvgXml = `

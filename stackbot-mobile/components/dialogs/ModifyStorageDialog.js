@@ -1,57 +1,69 @@
-import React, { useState } from 'react';
-import { Text, StyleSheet, TextInput, View, TouchableOpacity, Button } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
 import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import StorageModel from '../../models/StorageModel';
 import StorageTypes from '../../models/StorageTypes';
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-import DateButton from '../buttons/DateButton';
-import { formatDate } from '../../Helper';
-import ItemModel from '../../models/ItemModel';
+import StorageModel from '../../models/StorageModel';
 
 // Setup validation schema using Yup
 const validationSchema = Yup.object({
     name: Yup.string()
         .required('Name is required'),
     description: Yup.string()
-        .required('Description is required'),
-    count: Yup.number()
-        .required('Count is required'),
-    date: Yup.date()
-        .required('Date is required').nullable()
+        .required('Description is required')
 });
 
-const AddItemDialog = ({ visible, onClose, spaceType, spaceId }) => {
+const ModifyStorageDialog = ({ storage, visible, onClose }) => {
 
-    // const [date, setDate] = useState(new Date());
+    const storageModel = new StorageModel(storage)
 
-    const handleCreateItem = (name, description, count, date) => {
-        const item = new ItemModel({
-            name: name,
-            description: description,
-            count: Number(count),
-            expirationDate: ( spaceType === StorageTypes.Fridge ) ? date : null,
-            warrantyDate: ( spaceType === StorageTypes.Deposit ) ? date : null,
-            storageId: spaceId
-        })
+    const handleUpdateStorage = (name, description) => {
+        const updatedStorage = houseModel
+        updatedStorage.setName(name)
+        updatedStorage.setDescription(description)
 
-        // TODO - Handle Item creation
-        console.log(item)
+        // TODO - Handle Storage update
+        if (!updatedStorage.isEqual(house)) {
+            console.log("Something changed")
+            console.log(updatedStorage)
+
+            if (storageModel.getType() === StorageTypes.House) {
+                // House
+            } else if (storageModel.getType() === StorageTypes.Room) {
+                // Room
+            } else if (storageModel.getType() === StorageTypes.Deposit) {
+                // Deposit
+            } else {
+                // Fridge
+            }
+        }
+    }
+
+    const getStorageTypeName = () => {
+        if (storageModel.getType() === StorageTypes.House) {
+            return "House"
+        } else if (storageModel.getType() === StorageTypes.Room) {
+            return "Room"
+        } else if (storageModel.getType() === StorageTypes.Deposit) {
+            return "Deposit"
+        } else {
+            return "Fridge"
+        }
     }
 
     return (
         <CustomDialog visible={visible} onClose={onClose}>
-            <Text style={styles.title}>Add Item</Text>
+            <Text style={styles.title}>Modify {getStorageTypeName}</Text>
             <Formik
-                initialValues={{ name: '', description: '', count: '1', date: null }}
+                initialValues={{ name: storageModel.getName(), description: storageModel.getDescription() }}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    handleCreateItem(values.name, values.description, values.count, values.date)
+                    handleUpdateStorage(values.name, values.description)
                     onClose(); // Close the dialog on successful submission
                 }}
             >
-                {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
+                {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                     <>
                         <TextInput
                             style={styles.input}
@@ -75,31 +87,6 @@ const AddItemDialog = ({ visible, onClose, spaceType, spaceId }) => {
                         {touched.description && errors.description ? (
                             <Text style={styles.errorText}>{errors.description}</Text>
                         ) : null}
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Count"
-                            keyboardType="numeric"
-                            onChangeText={handleChange('count')}
-                            onBlur={handleBlur('count')}
-                            value={values.count}
-                        />
-                        {touched.count && errors.count ? (
-                            <Text style={styles.errorText}>{errors.count}</Text>
-                        ) : null}
-                        <View style={styles.dateContainer}>
-                            <View>
-                                <Text>{spaceType === StorageTypes.Fridge ? 'Expiration Date' : 'Warranty Date'}</Text>
-                            </View>
-                            <DateButton text={ values.date === null ? "-" : formatDate(values.date)} onPress={() => {
-                                DateTimePickerAndroid.open({
-                                    value: values.date === null ? new Date() : values.date,
-                                    onChange: (event, selectedDate) => {
-                                        setFieldValue('date', selectedDate || values.date);
-                                    },
-                                    mode: 'date'
-                                });
-                            }} />
-                        </View>
                         <View style={styles.controls}>
                             <TouchableOpacity onPress={handleSubmit}>
                                 <View style={styles.button} backgroundColor="blue">
@@ -143,12 +130,6 @@ const styles = StyleSheet.create({
         color: 'red',
         marginBottom: 5
     },
-    dateContainer: {
-        width: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around'
-    },
 
     // Controls
     controls: {
@@ -174,4 +155,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddItemDialog;
+export default ModifyStorageDialog;

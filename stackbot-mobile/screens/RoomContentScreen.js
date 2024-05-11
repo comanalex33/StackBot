@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, FlatList } from 'react-native';
-import RoomCard from '../components/cards/RoomCard';
+import StorageCard from '../components/cards/StorageCard';
 
 import '../assets/fridge.png'
 import '../assets/boxes.png'
@@ -36,7 +36,7 @@ const RoomContentScreen = ({ route, navigation }) => {
 
     const renderCard = ({ item }) => (
         <View style={styles.cardContainer}>
-            <RoomCard name={item.name} icon={getIcon(item.type)} onPress={() => handleSpaceClick(item)}/>
+            <StorageCard storage={item} icon={getIcon(item.type)} onPress={() => handleSpaceClick(item)}/>
         </View>
     );
 

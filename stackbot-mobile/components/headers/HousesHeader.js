@@ -1,26 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import ConfirmLogoutDialog from '../dialogs/ConfirmLogoutDialog';
 
 const HousesHeader = () => {
+
+    const [logoutDialogVisible, setLogoutDialogVisible] = useState(false)
+
+    const toggleLougoutDialogVisible = () => {
+        setLogoutDialogVisible(!logoutDialogVisible);
+    }
+
+    const handleLogout = () => {
+        console.log("Logout User")
+
+        // TODO - Implement user log out
+    }
+
     return (
         <View style={styles.header}>
             <TouchableOpacity
                 style={styles.headerIcon}
                 onPress={() => {
-                    // Handle microphone icon press
+                    // TODO - Handle microphone icon press
                 }}
             >
                 <MaterialCommunityIcons name="microphone" size={24} color="black" />
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.headerIcon}
-                onPress={() => {
-                    // Handle logout icon press
-                }}
+                onPress={toggleLougoutDialogVisible}
             >
                 <MaterialCommunityIcons name="logout" size={24} color="red" />
             </TouchableOpacity>
+
+            {/* Logout Confirmation Dialog */}
+            <ConfirmLogoutDialog visible={logoutDialogVisible} onClose={toggleLougoutDialogVisible} onSubmit={handleLogout}/>
         </View>
     );
 };

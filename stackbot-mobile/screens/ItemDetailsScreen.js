@@ -6,6 +6,9 @@ import '../assets/deposit-item.png'
 import ItemDetailCard from '../components/cards/ItemDetailCard';
 import ItemModel from '../models/ItemModel';
 import StorageModel from '../models/StorageModel';
+import ModifyItemDialog from '../components/dialogs/ModifyItemDialog';
+import { formatDate } from '../Helper';
+import DeleteItemDialog from '../components/dialogs/DeleteItemDialog';
 
 const ItemDetailsScreen = ({ route }) => {
 
@@ -15,6 +18,17 @@ const ItemDetailsScreen = ({ route }) => {
     const spaceModel = new StorageModel(space)
     const itemModel = new ItemModel(item)
 
+    const [modifyItemDialogVisible, setModifyItemDialogVisible] = useState(false)
+    const [deleteItemDialogVisible, setDeleteItemDialogVisible] = useState(false)
+
+    const toggleModifyItemDialog = () => {
+        setModifyItemDialogVisible(!modifyItemDialogVisible);
+    }
+
+    const toggleDeleteItemDialog = () => {
+        setDeleteItemDialogVisible(!deleteItemDialogVisible)
+    }
+
     const getIcon = () => {
 
         if (space.type === 'fridge') {
@@ -22,6 +36,12 @@ const ItemDetailsScreen = ({ route }) => {
         }
 
         return require('../assets/deposit-item.png')
+    }
+
+    const handleItemDelete = () => {
+        console.log(`Item ${itemModel.getName()} is deleted`)
+
+        // TODO - Handle Item deletion
     }
 
     return (
@@ -40,25 +60,31 @@ const ItemDetailsScreen = ({ route }) => {
             <View style={styles.content}>
                 <ItemDetailCard title={"Count"} value={itemModel.getCount()} />
                 {(space.type === 'fridge') ?
-                    <ItemDetailCard title={"Expiration Date"} value={itemModel.getExpirationDate()} />
+                    <ItemDetailCard title={"Expiration Date"} value={formatDate(itemModel.getExpirationDate())} />
                     :
-                    <ItemDetailCard title={"Warranty Date"} value={itemModel.getWarrantyDate()} />
+                    <ItemDetailCard title={"Warranty Date"} value={formatDate(itemModel.getWarrantyDate())} />
                 }
                 <ItemDetailCard title={"House"} value={houseModel.getName()} />
                 <ItemDetailCard title={"Location"} value={roomModel.getName() + " > " + spaceModel.getName()} />
             </View>
             <View style={styles.controls}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={toggleModifyItemDialog}>
                     <View style={styles.button} backgroundColor="blue">
                         <Text style={styles.buttonText}>Modify</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={toggleDeleteItemDialog}>
                     <View style={styles.button} backgroundColor="red">
                         <Text style={styles.buttonText}>Delete</Text>
                     </View>
                 </TouchableOpacity>
             </View>
+
+            {/* Modify Item Dialog */}
+            <ModifyItemDialog item={itemModel} visible={modifyItemDialogVisible} onClose={toggleModifyItemDialog} spaceType={spaceModel.getType()} />
+
+            {/* Delete Item Dialog */}
+            <DeleteItemDialog item={itemModel} visible={deleteItemDialogVisible} onClose={toggleDeleteItemDialog} onSubmit={handleItemDelete} />
         </View>
     )
 }
