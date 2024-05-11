@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Stackbot.DataAccess;
 using StackBot.Api.Models;
@@ -15,7 +14,7 @@ builder.Services.AddSwaggerGen();
 
 var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.Development.json")
+    .AddJsonFile("appsettings.json")
     .Build();
 
 using StreamReader r = new(config.GetValue<string>("SecretsFile"));

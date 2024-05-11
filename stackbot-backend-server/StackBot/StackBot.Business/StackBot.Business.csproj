@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -8,11 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Dtos\" />
-    <Folder Include="Users\" />
+    <Folder Include="Users\Commands\" />
+    <Folder Include="Users\Queries\" />
   </ItemGroup>
 
   <ItemGroup>
