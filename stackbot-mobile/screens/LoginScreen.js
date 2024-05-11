@@ -3,59 +3,56 @@ import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } 
 import { globalStyles } from '../styles/global';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import FlatButton from '../components/button';
+import FlatButton from '../components/buttons/Button';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const reviewSchema = yup.object({
     email: yup.string()
         .email('Invalid Email format')
         .required('Email is required'),
-    firstName: yup.string()
-        .required('First Name is required'),
-    lastName: yup.string()
-        .required('Last Name is required'),
     password: yup.string()
         .required('Password is required')
         .min(4),
-    confirmPassword: yup.string()
-        .oneOf([yup.ref('password'), null], 'Passwords must match')
-        .required('Confirming password is required'),
 });
 
-export default function Register({ navigation }) {
+export default function LoginScreen({ navigation }) {
 
     const [showPassword, setShowPassword] = useState(false);
     const toggleShowPassword = () => setShowPassword(!showPassword);
 
-    const handleRegister = (values) => {
-        alert("User registered")
-        // TODO - Call Register function
-        navigation.goBack()
+    const handleChangeToRegisterPage = () => {
+        navigation.navigate("Register")
+    }
+
+    const handleLogin = (values) => {
+        navigation.navigate("Houses")
+        // TODO - Call Login function
     }
 
     return (
         <View style={globalStyles.container}>
             <ImageBackground source={require('../assets/auth_background.png')} style={styles.backgroundImage}>
                 <View style={styles.authContainer}>
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.loginTitle}>Create Account</Text>
-                    </View>
                     <View style={styles.formContainer}>
                         <Formik
-                            initialValues={{ email: '', firstName: '', lastName: '', password: '', confirmPassword: '' }}
+                            initialValues={{ email: '', password: '' }}
                             validationSchema={reviewSchema}
                             onSubmit={(values, actions) => {
                                 actions.resetForm();
-                                handleRegister(values);
+                                handleLogin(values);
                             }}
                             onReset={() => { }}
                         >
                             {props => (
                                 <View>
+                                    <View style={styles.titleContainer}>
+                                        <Text style={styles.loginTitle}>StackBot</Text>
+                                    </View>
+
                                     <TextInput
                                         style={globalStyles.input}
                                         keyboardType="email-address"
-                                        placeholder='Email'
+                                        placeholder='Enter Email'
                                         placeholderTextColor="#aaa"
                                         onChangeText={props.handleChange('email')}
                                         onBlur={props.handleBlur('email')}
@@ -64,35 +61,16 @@ export default function Register({ navigation }) {
                                     {/* only if the left value is a valid string, will the right value be displayed */}
                                     <Text style={globalStyles.errorText}>{props.touched.email && props.errors.email}</Text>
 
-                                    <TextInput
-                                        style={globalStyles.input}
-                                        placeholder='First Name'
-                                        placeholderTextColor="#aaa"
-                                        onChangeText={props.handleChange('firstName')}
-                                        onBlur={props.handleBlur('firstName')}
-                                        value={props.values.firstName}
-                                    />
-                                    {/* only if the left value is a valid string, will the right value be displayed */}
-                                    <Text style={globalStyles.errorText}>{props.touched.firstName && props.errors.firstName}</Text>
-
-                                    <TextInput
-                                        style={globalStyles.input}
-                                        placeholder='Last Name'
-                                        placeholderTextColor="#aaa"
-                                        onChangeText={props.handleChange('lastName')}
-                                        onBlur={props.handleBlur('lastName')}
-                                        value={props.values.lastName}
-                                    />
-                                    {/* only if the left value is a valid string, will the right value be displayed */}
-                                    <Text style={globalStyles.errorText}>{props.touched.lastName && props.errors.lastName}</Text>
-
                                     <View style={styles.passwordContainer}>
                                         <TextInput
+
+                                            // Set secureTextEntry prop to hide  
+                                            //password when showPassword is false 
                                             secureTextEntry={!showPassword}
                                             value={props.values.password}
                                             onChangeText={props.handleChange('password')}
                                             style={styles.passwordInput}
-                                            placeholder="Password"
+                                            placeholder="Enter Password"
                                             placeholderTextColor="#aaa"
                                         />
                                         <MaterialCommunityIcons
@@ -103,22 +81,18 @@ export default function Register({ navigation }) {
                                             onPress={toggleShowPassword}
                                         />
                                     </View>
-                                    {/* only if the left value is a valid string, will the right value be displayed */}
                                     <Text style={globalStyles.errorText}>{props.touched.password && props.errors.password}</Text>
 
-                                    <TextInput
-                                        secureTextEntry
-                                        style={globalStyles.input}
-                                        placeholder='Confirm Password'
-                                        placeholderTextColor="#aaa"
-                                        onChangeText={props.handleChange('confirmPassword')}
-                                        onBlur={props.handleBlur('confirmPassword')}
-                                        value={props.values.confirmPassword}
-                                    />
-                                    {/* only if the left value is a valid string, will the right value be displayed */}
-                                    <Text style={globalStyles.errorText}>{props.touched.confirmPassword && props.errors.confirmPassword}</Text>
-
-                                    <FlatButton onPress={props.handleSubmit} text='register' />
+                                    <FlatButton onPress={props.handleSubmit} text='login' />
+                                    <View style={styles.titleContainer}>
+                                        <Text style={styles.createAccountText}>Don't have an account?</Text>
+                                        <TouchableOpacity onPress={(event) => {
+                                            handleChangeToRegisterPage();
+                                            props.handleReset(event)
+                                        }}>
+                                            <Text style={styles.createAccountButton}>Create one</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                             )}
                         </Formik>
@@ -175,6 +149,10 @@ const styles = StyleSheet.create({
     },
     createAccountButton: {
         marginStart: 10,
+        fontSize: 18,
         color: 'blue'
+    },
+    createAccountText: {
+        fontSize: 18
     }
 })
