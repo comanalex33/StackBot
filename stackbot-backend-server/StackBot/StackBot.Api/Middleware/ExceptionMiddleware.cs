@@ -22,7 +22,7 @@ namespace StackBot.Api.Middleware
             {
                 await _next(context);
             }
-            catch (EntityNotFoundException ex)
+            catch (Exception ex) when (ex is EntityNotFoundException || ex is StorageNotFoundException)
             {
                 await HandleCustomExceptionAsync(context, ex, HttpStatusCode.NotFound);
             }
@@ -52,7 +52,6 @@ namespace StackBot.Api.Middleware
                 Message = ex.Message
             };
 
-            // Json field names should start with lower letters
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             var serializedError = JsonSerializer.Serialize(error, options);
 

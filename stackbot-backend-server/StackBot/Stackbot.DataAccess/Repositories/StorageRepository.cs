@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Stackbot.DataAccess.Exceptions;
 using Stackbot.Domain.Entities;
 using StackBot.Business.Interfaces;
 using StackBot.Domain.Entities;
@@ -17,6 +18,11 @@ namespace Stackbot.DataAccess.Repositories
 
         public async Task<Storage> CreateStorage(Storage storage, Guid userId)
         {
+            if (_context.Storages.Any(s => s.Name == storage.Name))
+            {
+                throw new EntityAlreadyExistsException(nameof(Storage), storage.Name);
+            }
+
             _context.Storages.Add(storage);
 
             var userStorage = new UserStorage
@@ -60,6 +66,11 @@ namespace Stackbot.DataAccess.Repositories
 
         public async Task<Storage> UpdateStorage(Storage storage)
         {
+            if (_context.Storages.Any(s => s.Name == storage.Name))
+            {
+                throw new EntityAlreadyExistsException(nameof(Storage), storage.Name);
+            }
+
             var storageForUpdate = await _context.Storages.FirstOrDefaultAsync(s => s.Id == storage.Id);
 
             if (storageForUpdate == null)

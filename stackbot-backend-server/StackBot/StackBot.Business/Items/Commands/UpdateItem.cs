@@ -22,11 +22,6 @@ namespace StackBot.Business.Items.Commands
         {
             var itemToUpdate = await _itemRepository.GetItemByName(request.name);
 
-            if (itemToUpdate == null)
-            {
-                throw new ApplicationException("Item not found!");
-            }
-
             itemToUpdate.Name = request.updateItemRequestDto.Name;
             itemToUpdate.Description = request.updateItemRequestDto.Description;
             itemToUpdate.Count = request.updateItemRequestDto.Count;

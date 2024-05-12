@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Stackbot.DataAccess.Exceptions;
 using StackBot.Business.Dtos.StorageDtos;
 using StackBot.Business.Interfaces;
 
@@ -24,7 +25,7 @@ namespace StackBot.Business.Storages.Commands
 
             if (storageToUpdate == null)
             {
-                throw new ApplicationException("Storage not found!");
+                throw new StorageNotFoundException(request.name);
             }
 
             storageToUpdate.Name = request.updateStorageDto.Name;

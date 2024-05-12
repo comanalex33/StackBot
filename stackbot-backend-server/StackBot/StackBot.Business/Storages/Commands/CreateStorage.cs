@@ -21,8 +21,6 @@ namespace StackBot.Business.Storages.Commands
 
         public async Task<StorageResponseDto> Handle(CreateStorage request, CancellationToken cancellationToken)
         {
-            var storageParent = await _storageRepository.GetStorageByName(request.createStorageRequestDto.ParentStorageName);
-
             var storage = new Storage
             {
                 Name = request.createStorageRequestDto.Name,
@@ -30,6 +28,7 @@ namespace StackBot.Business.Storages.Commands
                 Description = request.createStorageRequestDto.Description
             };
 
+            var storageParent = await _storageRepository.GetStorageByName(request.createStorageRequestDto.ParentStorageName);
             if (storageParent != null)
             {
                 storage.ParentStorageId = storageParent.Id;
@@ -37,8 +36,6 @@ namespace StackBot.Business.Storages.Commands
             }
 
             await _storageRepository.CreateStorage(storage, request.userId);
-
-
 
             return _mapper.Map<StorageResponseDto>(storage);
         }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Stackbot.DataAccess.Exceptions;
 using StackBot.Business.Dtos.ItemDtos;
 using StackBot.Business.Interfaces;
 using StackBot.Domain.Entities;
@@ -23,6 +24,11 @@ namespace StackBot.Business.Items.Commands
         public async Task<ItemResponseDto> Handle(CreateItem request, CancellationToken cancellationToken)
         {
             var getStorage = await _storageRepostiory.GetStorageByName(request.createItemRequestDto.StorageName);
+
+            if (getStorage == null)
+            {
+                throw new StorageNotFoundException(request.createItemRequestDto.StorageName);
+            }
 
             var item = new Item()
             {

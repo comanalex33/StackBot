@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Stackbot.DataAccess.Exceptions;
 using StackBot.Business.Interfaces;
 
 namespace StackBot.Business.Storages.Commands
@@ -16,7 +17,7 @@ namespace StackBot.Business.Storages.Commands
 
         public async Task<Unit> Handle(DeleteStorage request, CancellationToken cancellationToken)
         {
-            if (request.parentStorageId == null)
+            /*if (request.parentStorageId == null)
             {
                 var storagesCount = await _storageRepository.CountStoragesWithTheSameName(request.storageName);
 
@@ -24,13 +25,13 @@ namespace StackBot.Business.Storages.Commands
                 {
                     throw new ApplicationException("Exception Error 409: CONFLICT!");
                 }
-            }
+            }*/
 
             var storageToRemove = await _storageRepository.GetStorageByName(request.storageName);
 
             if (storageToRemove == null)
             {
-                throw new ApplicationException("Storage not found!");
+                throw new StorageNotFoundException(request.storageName);
             }
 
             await _storageRepository.DeleteStorageById(storageToRemove.Id);

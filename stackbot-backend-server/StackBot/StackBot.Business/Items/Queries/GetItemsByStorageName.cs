@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Stackbot.DataAccess.Exceptions;
 using StackBot.Business.Dtos.ItemDtos;
 using StackBot.Business.Interfaces;
 
@@ -26,7 +27,7 @@ namespace StackBot.Business.Items.Queries
 
             if (getStorage == null)
             {
-                throw new ApplicationException("Storage not found!");
+                throw new StorageNotFoundException(request.storageName);
             }
 
             var items = await _itemRepository.GetAllItemsByStorageId(getStorage.Id);

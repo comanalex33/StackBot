@@ -2,7 +2,7 @@
 {
     public class UserAlreadyExistsException : Exception
     {
-        private const string MessageTemplate = "The User \"{0}\" already exists.";
+        private const string MessageTemplate = "The User with email {0} already exists.";
 
         public UserAlreadyExistsException()
             : base() { }

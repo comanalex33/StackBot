@@ -18,11 +18,6 @@ namespace StackBot.Business.Items.Commands
         {
             var itemToRemove = await _itemRepository.GetItemByName(request.name);
 
-            if (itemToRemove == null)
-            {
-                throw new ApplicationException("Item not found!");
-            }
-
             await _itemRepository.DeleteItemById(itemToRemove.Id);
 
             return Unit.Value;

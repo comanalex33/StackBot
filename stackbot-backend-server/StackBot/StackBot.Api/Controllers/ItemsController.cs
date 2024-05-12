@@ -39,15 +39,15 @@ namespace StackBot.Api.Controllers
         }
 
         [HttpGet("{itemName}")]
-        public async Task<IActionResult> GetItemsByName(string itemName)
+        public async Task<IActionResult> GetItemsContainingName(string itemName)
         {
-            var command = new GetItemsByName(itemName);
+            var command = new GetItemsContainingName(itemName);
             var response = await _mediator.Send(command);
 
             return Ok(response);
         }
 
-        [HttpGet("/items/{storageName}")]
+        [HttpGet("items/{storageName}")]
         public async Task<IActionResult> GetItemsByStorageName(string storageName)
         {
             var command = new GetItemsByStorageName(storageName);

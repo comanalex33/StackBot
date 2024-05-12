@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Stackbot.DataAccess.Exceptions;
 using StackBot.Business.Interfaces;
 using StackBot.Domain.Entities;
 
@@ -15,6 +16,11 @@ namespace Stackbot.DataAccess.Repositories
 
         public async Task<Item> CreateItem(Item item)
         {
+            if (_context.Items.Any(i => i.Name == item.Name))
+            {
+                throw new EntityAlreadyExistsException(nameof(Item), item.Name);
+            }
+
             _context.Items.Add(item);
 
             await _context.SaveChangesAsync();
@@ -41,9 +47,9 @@ namespace Stackbot.DataAccess.Repositories
             return await _context.Items.ToListAsync();
         }
 
-        public async Task<ICollection<Item>> GetAllItemsByName(string itemName)
+        public async Task<ICollection<Item>> GetAllItemsContainingName(string itemName)
         {
-            return await _context.Items.Where(i => i.Name.Contains(itemName)).ToListAsync();
+            return await _context.Items.Where(i => i.Name.ToLower().Contains(itemName.ToLower())).ToListAsync();
         }
 
         public async Task<ICollection<Item>> GetAllItemsByStorageId(Guid storageId)
@@ -57,7 +63,7 @@ namespace Stackbot.DataAccess.Repositories
 
             if (getItem == null)
             {
-                throw new ApplicationException($"{name} does not exist");
+                throw new EntityNotFoundException(nameof(Item), name);
             }
 
             return getItem;
@@ -65,6 +71,11 @@ namespace Stackbot.DataAccess.Repositories
 
         public async Task<Item> UpdateItemById(Item item)
         {
+            if (_context.Items.Any(i => i.Name == item.Name))
+            {
+                throw new EntityAlreadyExistsException(nameof(Item), item.Name);
+            }
+
             var itemForUpdate = await _context.Items.FirstOrDefaultAsync(i => i.Id == item.Id);
 
             if (itemForUpdate == null)

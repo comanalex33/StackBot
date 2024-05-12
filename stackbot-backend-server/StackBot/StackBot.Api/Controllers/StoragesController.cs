@@ -42,9 +42,11 @@ namespace StackBot.Api.Controllers
             return NoContent();
         }
 
-        [HttpGet("/houses/{userId}")]
-        public async Task<IActionResult> GetHousesByUserId(Guid userId)
+        [HttpGet("/houses")]
+        public async Task<IActionResult> GetHousesByUserId()
         {
+            var userId = HttpContext.GetUserIdClaimValue();
+
             var command = new GetHousesByUserId(userId);
             var response = await _mediator.Send(command);
 

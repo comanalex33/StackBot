@@ -10,6 +10,6 @@ namespace StackBot.Business.Interfaces
         Task<ICollection<Item>> GetAllItems();
         Task<Item> GetItemByName(string name);
         Task<ICollection<Item>> GetAllItemsByStorageId(Guid storageId);
-        Task<ICollection<Item>> GetAllItemsByName(string itemName);
+        Task<ICollection<Item>> GetAllItemsContainingName(string itemName);
     }
 }
