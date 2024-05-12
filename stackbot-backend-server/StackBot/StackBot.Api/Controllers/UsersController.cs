@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StackBot.Api.Extensions;
 using StackBot.Api.Models;
 using StackBot.Business.Dtos.UserDtos;
 using StackBot.Business.Users.Commands;
@@ -57,6 +58,18 @@ namespace StackBot.Api.Controllers
             var response = await _mediator.Send(query);
 
             return Ok(response);
+        }
+
+        [HttpDelete]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> DeleteUser()
+        {
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new DeleteUser(userId);
+            await _mediator.Send(command);
+
+            return NoContent();
         }
     }
 }

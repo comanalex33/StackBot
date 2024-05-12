@@ -17,7 +17,7 @@ namespace Stackbot.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -152,7 +152,7 @@ namespace Stackbot.DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Stackbot.DataAccess.Entities.Item", b =>
+            modelBuilder.Entity("StackBot.Domain.Entities.Item", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -182,10 +182,10 @@ namespace Stackbot.DataAccess.Migrations
 
                     b.HasIndex("StorageId");
 
-                    b.ToTable("Items", (string)null);
+                    b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("Stackbot.DataAccess.Entities.Storage", b =>
+            modelBuilder.Entity("StackBot.Domain.Entities.Storage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -209,10 +209,10 @@ namespace Stackbot.DataAccess.Migrations
 
                     b.HasIndex("ParentStorageId");
 
-                    b.ToTable("Storages", (string)null);
+                    b.ToTable("Storages");
                 });
 
-            modelBuilder.Entity("Stackbot.DataAccess.Entities.User", b =>
+            modelBuilder.Entity("StackBot.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -285,7 +285,7 @@ namespace Stackbot.DataAccess.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Stackbot.DataAccess.Entities.UserStorage", b =>
+            modelBuilder.Entity("Stackbot.Domain.Entities.UserStorage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -303,7 +303,7 @@ namespace Stackbot.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserStorage", (string)null);
+                    b.ToTable("UserStorage");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -317,7 +317,7 @@ namespace Stackbot.DataAccess.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Stackbot.DataAccess.Entities.User", null)
+                    b.HasOne("StackBot.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -326,7 +326,7 @@ namespace Stackbot.DataAccess.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Stackbot.DataAccess.Entities.User", null)
+                    b.HasOne("StackBot.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -341,7 +341,7 @@ namespace Stackbot.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Stackbot.DataAccess.Entities.User", null)
+                    b.HasOne("StackBot.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -350,16 +350,16 @@ namespace Stackbot.DataAccess.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Stackbot.DataAccess.Entities.User", null)
+                    b.HasOne("StackBot.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Stackbot.DataAccess.Entities.Item", b =>
+            modelBuilder.Entity("StackBot.Domain.Entities.Item", b =>
                 {
-                    b.HasOne("Stackbot.DataAccess.Entities.Storage", "Storage")
+                    b.HasOne("StackBot.Domain.Entities.Storage", "Storage")
                         .WithMany("Items")
                         .HasForeignKey("StorageId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -368,9 +368,9 @@ namespace Stackbot.DataAccess.Migrations
                     b.Navigation("Storage");
                 });
 
-            modelBuilder.Entity("Stackbot.DataAccess.Entities.Storage", b =>
+            modelBuilder.Entity("StackBot.Domain.Entities.Storage", b =>
                 {
-                    b.HasOne("Stackbot.DataAccess.Entities.Storage", "ParentStorage")
+                    b.HasOne("StackBot.Domain.Entities.Storage", "ParentStorage")
                         .WithMany("SubStorages")
                         .HasForeignKey("ParentStorageId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -378,15 +378,15 @@ namespace Stackbot.DataAccess.Migrations
                     b.Navigation("ParentStorage");
                 });
 
-            modelBuilder.Entity("Stackbot.DataAccess.Entities.UserStorage", b =>
+            modelBuilder.Entity("Stackbot.Domain.Entities.UserStorage", b =>
                 {
-                    b.HasOne("Stackbot.DataAccess.Entities.Storage", "Storage")
+                    b.HasOne("StackBot.Domain.Entities.Storage", "Storage")
                         .WithMany("UserStorages")
                         .HasForeignKey("StorageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Stackbot.DataAccess.Entities.User", "User")
+                    b.HasOne("StackBot.Domain.Entities.User", "User")
                         .WithMany("UserStorages")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -397,7 +397,7 @@ namespace Stackbot.DataAccess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Stackbot.DataAccess.Entities.Storage", b =>
+            modelBuilder.Entity("StackBot.Domain.Entities.Storage", b =>
                 {
                     b.Navigation("Items");
 
@@ -406,7 +406,7 @@ namespace Stackbot.DataAccess.Migrations
                     b.Navigation("UserStorages");
                 });
 
-            modelBuilder.Entity("Stackbot.DataAccess.Entities.User", b =>
+            modelBuilder.Entity("StackBot.Domain.Entities.User", b =>
                 {
                     b.Navigation("UserStorages");
                 });

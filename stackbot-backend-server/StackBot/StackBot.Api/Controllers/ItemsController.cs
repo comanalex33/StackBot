@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using StackBot.Business.Dtos.ItemDtos;
 using StackBot.Business.Items.Commands;
 using StackBot.Business.Items.Queries;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace StackBot.Api.Controllers
 {
@@ -52,6 +51,15 @@ namespace StackBot.Api.Controllers
         public async Task<IActionResult> GetItemsByStorageName(string storageName)
         {
             var command = new GetItemsByStorageName(storageName);
+            var response = await _mediator.Send(command);
+
+            return Ok(response);
+        }
+
+        [HttpPut("{name}")]
+        public async Task<IActionResult> UpdateItem(string name, UpdateItemDto updateItemDto)
+        {
+            var command = new UpdateItem(name, updateItemDto);
             var response = await _mediator.Send(command);
 
             return Ok(response);

@@ -60,7 +60,7 @@ namespace Stackbot.DataAccess.Repositories
 
         public async Task<Storage> UpdateStorage(Storage storage)
         {
-            var storageForUpdate = await _context.Items.FirstOrDefaultAsync(s => s.Id == storage.Id);
+            var storageForUpdate = await _context.Storages.FirstOrDefaultAsync(s => s.Id == storage.Id);
 
             if (storageForUpdate == null)
             {

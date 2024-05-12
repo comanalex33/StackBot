@@ -56,14 +56,8 @@ namespace Stackbot.DataAccess.Repositories
 
         public async Task<User> GetUserById(Guid userId)
         {
-            //return await _userManager.FindByIdAsync(userId.ToString());
             return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new EntityNotFoundException("User", userId);
         }
-
-        /*public async Task<ICollection<User>> GetAllUsers()
-        {
-            return await _context.Users.ToListAsync();
-        }*/
 
         public async Task<User> UpdateUser(User user)
         {

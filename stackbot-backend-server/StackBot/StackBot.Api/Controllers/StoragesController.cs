@@ -68,5 +68,14 @@ namespace StackBot.Api.Controllers
 
             return Ok(response);
         }
+
+        [HttpPut("{name}")]
+        public async Task<IActionResult> UpdateStorage(String name, UpdateStorageDto updateStorageDto)
+        {
+            var command = new UpdateStorage(name, updateStorageDto);
+            var response = await _mediator.Send(command);
+
+            return Ok(response);
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace Stackbot.DataAccess.Configurations
             builder.HasMany(u => u.UserStorages)
                 .WithOne(us => us.User)
                 .HasForeignKey(us => us.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
