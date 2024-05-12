@@ -2,7 +2,7 @@
 
 namespace StackBot.Business.Dtos.StorageDtos
 {
-    public class CreateStorageRequestDto
+    public class CreateStorageDto
     {
         public string Name { get; set; }
         public StorageType Type { get; set; }

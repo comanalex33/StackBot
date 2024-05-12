@@ -182,7 +182,7 @@ namespace Stackbot.DataAccess.Migrations
 
                     b.HasIndex("StorageId");
 
-                    b.ToTable("Items");
+                    b.ToTable("Items", (string)null);
                 });
 
             modelBuilder.Entity("Stackbot.DataAccess.Entities.Storage", b =>
@@ -209,7 +209,7 @@ namespace Stackbot.DataAccess.Migrations
 
                     b.HasIndex("ParentStorageId");
 
-                    b.ToTable("Storages");
+                    b.ToTable("Storages", (string)null);
                 });
 
             modelBuilder.Entity("Stackbot.DataAccess.Entities.User", b =>
@@ -303,7 +303,7 @@ namespace Stackbot.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserStorage");
+                    b.ToTable("UserStorage", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

@@ -2,7 +2,7 @@
 
 namespace StackBot.Business.Dtos.StorageDtos
 {
-    public class UpdateStorageRequestDto
+    public class UpdateStorageDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

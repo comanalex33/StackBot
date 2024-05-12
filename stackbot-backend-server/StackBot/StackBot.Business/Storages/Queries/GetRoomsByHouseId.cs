@@ -5,9 +5,9 @@ using StackBot.Business.Interfaces;
 
 namespace StackBot.Business.Storages.Queries
 {
-    public record GetStoragesByParentId(Guid parentId) : IRequest<ICollection<StorageResponseDto>>;
+    public record GetRoomsByHouseId(Guid parentId) : IRequest<ICollection<StorageResponseDto>>;
 
-    public class GetStoragesByParentIdHandler : IRequestHandler<GetStoragesByParentId, ICollection<StorageResponseDto>>
+    public class GetStoragesByParentIdHandler : IRequestHandler<GetRoomsByHouseId, ICollection<StorageResponseDto>>
     {
         private readonly IStorageRepository _storageRepository;
         private readonly IMapper _mapper;
@@ -18,9 +18,9 @@ namespace StackBot.Business.Storages.Queries
             _mapper = mapper;
         }
 
-        public async Task<ICollection<StorageResponseDto>> Handle(GetStoragesByParentId request, CancellationToken cancellationToken)
+        public async Task<ICollection<StorageResponseDto>> Handle(GetRoomsByHouseId request, CancellationToken cancellationToken)
         {
-            var storages = await _storageRepository.GetStoragesByParentId(request.parentId);
+            var storages = await _storageRepository.GetRoomsByHouseId(request.parentId);
 
             if(storages == null)
             {

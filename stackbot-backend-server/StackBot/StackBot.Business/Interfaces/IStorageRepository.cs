@@ -4,13 +4,14 @@ namespace StackBot.Business.Interfaces
 {
     public interface IStorageRepository
     {
-        Task<Storage> CreateStorage(Storage storage);
+        Task<Storage> CreateStorage(Storage storage, Guid userId);
         Task<Storage> UpdateStorage(Storage storage);
         Task DeleteStorageById(Guid storageId);
         Task<ICollection<Storage>> GetAllStorages();
         Task<Storage> GetStorageByName(string storageName);
         Task<int> CountStoragesWithTheSameName(string storageName);
         Task<ICollection<Storage>> GetHousesByUserId(Guid userId);
-        Task<ICollection<Storage>> GetStoragesByParentId(Guid parentId);
+        Task<ICollection<Storage>> GetRoomsByHouseId(Guid parentId);
+        Task<ICollection<Storage>> GetSubStoragesByRoomId(Guid parentId);
     }
 }

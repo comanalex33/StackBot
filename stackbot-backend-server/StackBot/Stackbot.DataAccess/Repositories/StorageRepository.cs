@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Stackbot.Domain.Entities;
 using StackBot.Business.Interfaces;
 using StackBot.Domain.Entities;
+using StackBot.Domain.Enums;
 
 namespace Stackbot.DataAccess.Repositories
 {
@@ -13,9 +15,17 @@ namespace Stackbot.DataAccess.Repositories
             _context = context;
         }
 
-        public async Task<Storage> CreateStorage(Storage storage)
+        public async Task<Storage> CreateStorage(Storage storage, Guid userId)
         {
             _context.Storages.Add(storage);
+
+            var userStorage = new UserStorage
+            {
+                StorageId = storage.Id,
+                UserId = userId
+            };
+
+            _context.UserStorage.Add(userStorage);
 
             await _context.SaveChangesAsync();
 
@@ -45,11 +55,6 @@ namespace Stackbot.DataAccess.Repositories
         {
             var getStorage = await _context.Storages.FirstOrDefaultAsync(s => s.Name == storageName);
 
-            if (getStorage == null)
-            {
-                throw new ApplicationException($"{storageName} does not exist");
-            }
-
             return getStorage;
         }
 
@@ -78,16 +83,24 @@ namespace Stackbot.DataAccess.Repositories
 
         public async Task<ICollection<Storage>> GetHousesByUserId(Guid userId)
         {
-            var getStorages = await _context.Storages.Where(s => s.UserStorages.Any(u => u.UserId == userId)).ToListAsync();
+            var getStorages = await _context.Storages.Where(s => s.UserStorages.Any(u => u.UserId == userId) && s.Type == StorageType.House).ToListAsync();
 
             return getStorages;
         }
 
-        public async Task<ICollection<Storage>> GetStoragesByParentId(Guid parentId)
+        public async Task<ICollection<Storage>> GetRoomsByHouseId(Guid parentId)
         {
-            var getStorages = await _context.Storages.Where(s => s.ParentStorage.Id == parentId).ToListAsync();
+            var getStorages = await _context.Storages.Where(s => s.ParentStorage.Id == parentId && s.Type == StorageType.Room).ToListAsync();
 
             return getStorages;
         }
+
+        public async Task<ICollection<Storage>> GetSubStoragesByRoomId(Guid parentId)
+        {
+            var getStorages = await _context.Storages.Where(s => s.ParentStorage.Id == parentId && (s.Type == StorageType.Deposit || s.Type == StorageType.Fridge)).ToListAsync();
+
+            return getStorages;
+        }
+
     }
 }

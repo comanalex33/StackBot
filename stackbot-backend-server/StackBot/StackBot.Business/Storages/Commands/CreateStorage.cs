@@ -6,7 +6,7 @@ using StackBot.Domain.Entities;
 
 namespace StackBot.Business.Storages.Commands
 {
-    public record CreateStorage(CreateStorageRequestDto createStorageRequestDto) : IRequest<StorageResponseDto>;
+    public record CreateStorage(CreateStorageDto createStorageRequestDto, Guid userId) : IRequest<StorageResponseDto>;
 
     public class CreateStorageHandler : IRequestHandler<CreateStorage, StorageResponseDto>
     {
@@ -27,11 +27,18 @@ namespace StackBot.Business.Storages.Commands
             {
                 Name = request.createStorageRequestDto.Name,
                 Type = request.createStorageRequestDto.Type,
-                Description = request.createStorageRequestDto.Description,
-                ParentStorageId = storageParent.Id
+                Description = request.createStorageRequestDto.Description
             };
 
-            await _storageRepository.CreateStorage(storage);
+            if (storageParent != null)
+            {
+                storage.ParentStorageId = storageParent.Id;
+
+            }
+
+            await _storageRepository.CreateStorage(storage, request.userId);
+
+
 
             return _mapper.Map<StorageResponseDto>(storage);
         }
