@@ -383,13 +383,13 @@ namespace Stackbot.DataAccess.Migrations
                     b.HasOne("StackBot.Domain.Entities.Storage", "Storage")
                         .WithMany("UserStorages")
                         .HasForeignKey("StorageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("StackBot.Domain.Entities.User", "User")
                         .WithMany("UserStorages")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Storage");
