@@ -6,7 +6,7 @@ using StackBot.Domain.Entities;
 
 namespace StackBot.Business.Items.Commands
 {
-    public record CreateItem(CreateItemRequestDto createItemRequestDto) : IRequest<ItemResponseDto>;
+    public record CreateItem(CreateItemDto createItemRequestDto) : IRequest<ItemResponseDto>;
 
     public class CreateItemHandler : IRequestHandler<CreateItem, ItemResponseDto>
     {

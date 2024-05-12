@@ -51,13 +51,13 @@ namespace Stackbot.DataAccess.Repositories
             return await _context.Items.Where(i => i.StorageId == storageId).ToListAsync();
         }
 
-        public async Task<Item> GetItemById(Guid itemId)
+        public async Task<Item> GetItemByName(string name)
         {
-            var getItem = await _context.Items.FirstOrDefaultAsync(i => i.Id == itemId);
+            var getItem = await _context.Items.FirstOrDefaultAsync(i => i.Name == name);
 
             if (getItem == null)
             {
-                throw new ApplicationException($"{itemId} does not exist");
+                throw new ApplicationException($"{name} does not exist");
             }
 
             return getItem;
