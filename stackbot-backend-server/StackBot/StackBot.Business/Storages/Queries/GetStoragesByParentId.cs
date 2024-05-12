@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using StackBot.Business.Dtos.StorageDtos;
 using StackBot.Business.Interfaces;
 
@@ -9,10 +10,12 @@ namespace StackBot.Business.Storages.Queries
     public class GetStoragesByParentIdHandler : IRequestHandler<GetStoragesByParentId, ICollection<StorageResponseDto>>
     {
         private readonly IStorageRepository _storageRepository;
+        private readonly IMapper _mapper;
 
-        public GetStoragesByParentIdHandler(IStorageRepository storageRepository)
+        public GetStoragesByParentIdHandler(IStorageRepository storageRepository, IMapper mapper)
         {
             _storageRepository = storageRepository;
+            _mapper = mapper;
         }
 
         public async Task<ICollection<StorageResponseDto>> Handle(GetStoragesByParentId request, CancellationToken cancellationToken)
@@ -24,14 +27,7 @@ namespace StackBot.Business.Storages.Queries
                 throw new ApplicationException("No storages were found for the given parent storage!");
             }
 
-            var storageDtos = new List<StorageResponseDto>();
-
-            foreach (var storage in storages)
-            {
-                storageDtos.Add(StorageResponseDto.FromStorage(storage));
-            }
-
-            return storageDtos;
+            return _mapper.Map<ICollection<StorageResponseDto>>(storages);
 
         }
     }

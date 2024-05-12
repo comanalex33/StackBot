@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using StackBot.Business.Dtos.ItemDtos;
 using StackBot.Business.Interfaces;
 
@@ -9,10 +10,12 @@ namespace StackBot.Business.Items.Commands
     public class UpdateItemHandler : IRequestHandler<UpdateItem, ItemResponseDto>
     {
         private readonly IItemRepository _itemRepository;
+        private readonly IMapper _mapper;
 
-        public UpdateItemHandler(IItemRepository itemRepository)
+        public UpdateItemHandler(IItemRepository itemRepository, IMapper mapper)
         {
             _itemRepository = itemRepository;
+            _mapper = mapper;
         }
 
         public async Task<ItemResponseDto> Handle(UpdateItem request, CancellationToken cancellationToken)
@@ -32,7 +35,7 @@ namespace StackBot.Business.Items.Commands
             
             var updatedItem = await _itemRepository.UpdateItemById(itemToUpdate);
 
-            return ItemResponseDto.FromItem(updatedItem);
+            return _mapper.Map<ItemResponseDto>(updatedItem);
         }
     }
 }

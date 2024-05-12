@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using StackBot.Business.Dtos.StorageDtos;
 using StackBot.Business.Interfaces;
 using StackBot.Domain.Entities;
@@ -10,10 +11,12 @@ namespace StackBot.Business.Storages.Commands
     public class CreateStorageHandler : IRequestHandler<CreateStorage, StorageResponseDto>
     {
         private readonly IStorageRepository _storageRepository;
+        private readonly IMapper _mapper;
 
-        public CreateStorageHandler(IStorageRepository storageRepository)
+        public CreateStorageHandler(IStorageRepository storageRepository, IMapper mapper)
         {
             _storageRepository = storageRepository;
+            _mapper = mapper;
         }
 
         public async Task<StorageResponseDto> Handle(CreateStorage request, CancellationToken cancellationToken)
@@ -30,7 +33,7 @@ namespace StackBot.Business.Storages.Commands
 
             await _storageRepository.CreateStorage(storage);
 
-            return StorageResponseDto.FromStorage(storage);
+            return _mapper.Map<StorageResponseDto>(storage);
         }
     }
 }

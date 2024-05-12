@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using StackBot.Business.Dtos.ItemDtos;
 using StackBot.Business.Interfaces;
 
@@ -10,11 +11,13 @@ namespace StackBot.Business.Items.Queries
     {
         private readonly IItemRepository _itemRepository;
         private readonly IStorageRepository _storageRepostiory;
+        private readonly IMapper _mapper;
 
-        public GetItemsByStorageNameHandler(IItemRepository itemRepository, IStorageRepository storageRepostiory)
+        public GetItemsByStorageNameHandler(IItemRepository itemRepository, IStorageRepository storageRepostiory, IMapper mapper)
         {
             _itemRepository = itemRepository;
             _storageRepostiory = storageRepostiory;
+            _mapper = mapper;
         }
 
         public async Task<ICollection<ItemResponseDto>> Handle(GetItemsByStorageName request, CancellationToken cancellationToken)
@@ -28,14 +31,7 @@ namespace StackBot.Business.Items.Queries
 
             var items = await _itemRepository.GetAllItemsByStorageId(getStorage.Id);
 
-            var itemDtos = new List<ItemResponseDto>();
-
-            foreach( var item in items)
-            {
-                itemDtos.Add(ItemResponseDto.FromItem(item));
-            }
-
-            return itemDtos;
+            return _mapper.Map<ICollection<ItemResponseDto>>(items);
         }
     }
 }

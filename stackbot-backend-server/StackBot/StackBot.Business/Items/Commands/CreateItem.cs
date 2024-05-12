@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using StackBot.Business.Dtos.ItemDtos;
 using StackBot.Business.Interfaces;
 using StackBot.Domain.Entities;
@@ -11,11 +12,13 @@ namespace StackBot.Business.Items.Commands
     {
         private readonly IItemRepository _itemRepository;
         private readonly IStorageRepository _storageRepostiory;
+        private readonly IMapper _mapper;
 
-        public CreateItemHandler(IItemRepository itemRepository, IStorageRepository storageRepostiory)
+        public CreateItemHandler(IItemRepository itemRepository, IStorageRepository storageRepostiory, IMapper mapper)
         {
             _itemRepository = itemRepository;
             _storageRepostiory = storageRepostiory;
+            _mapper = mapper;
         }
         public async Task<ItemResponseDto> Handle(CreateItem request, CancellationToken cancellationToken)
         {
@@ -34,7 +37,7 @@ namespace StackBot.Business.Items.Commands
 
             var createdItem = await _itemRepository.CreateItem(item);
 
-            return ItemResponseDto.FromItem(createdItem);
+            return _mapper.Map<ItemResponseDto>(createdItem);
         }
     }
 }

@@ -53,6 +53,9 @@ builder.Services.AddSingleton<IdentityService>();
 // MediatR
 builder.Services.AddMediatR();
 
+// AutoMapper
+builder.Services.AddAutoMapper();
+
 // Repositories
 builder.Services.AddRepositories();
 

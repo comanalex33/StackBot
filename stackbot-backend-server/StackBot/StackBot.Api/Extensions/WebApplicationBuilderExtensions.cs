@@ -109,5 +109,10 @@ namespace StackBot.Api.Extensions
             services.AddScoped<IStorageRepository, StorageRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
         }
+
+        public static void AddAutoMapper(this IServiceCollection services)
+        {
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        }
     }
 }

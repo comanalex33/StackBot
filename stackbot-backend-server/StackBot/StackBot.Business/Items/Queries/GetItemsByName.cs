@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using StackBot.Business.Dtos.ItemDtos;
 using StackBot.Business.Interfaces;
 
@@ -9,24 +10,19 @@ namespace StackBot.Business.Items.Queries
     public class GetItemsByNameHandler : IRequestHandler<GetItemsByName, ICollection<ItemResponseDto>>
     {
         private readonly IItemRepository _itemRepository;
+        private readonly IMapper _mapper;
 
-        public GetItemsByNameHandler(IItemRepository itemRepository)
+        public GetItemsByNameHandler(IItemRepository itemRepository, IMapper mapper)
         {
             _itemRepository = itemRepository;
+            _mapper = mapper;
         }
 
         public async Task<ICollection<ItemResponseDto>> Handle(GetItemsByName request, CancellationToken cancellationToken)
         {
             var items = await _itemRepository.GetAllItemsByName(request.itemName);
 
-            var itemDtos = new List<ItemResponseDto>();
-
-            foreach (var item in items)
-            {
-                itemDtos.Add(ItemResponseDto.FromItem(item));
-            }
-
-            return itemDtos;
+            return _mapper.Map<ICollection<ItemResponseDto>>(items);
         }
     }
 }

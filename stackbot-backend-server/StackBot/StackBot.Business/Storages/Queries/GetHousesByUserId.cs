@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using StackBot.Business.Dtos.StorageDtos;
 using StackBot.Business.Interfaces;
 
@@ -9,10 +10,12 @@ namespace StackBot.Business.Storages.Queries
     public class GetHousesByUserIdHandler : IRequestHandler<GetHousesByUserId, ICollection<StorageResponseDto>>
     {
         private readonly IStorageRepository _storageRepository;
+        private readonly IMapper _mapper;
 
-        public GetHousesByUserIdHandler(IStorageRepository storageRepository)
+        public GetHousesByUserIdHandler(IStorageRepository storageRepository, IMapper mapper)
         {
             _storageRepository = storageRepository;
+            _mapper = mapper;
         }
 
         public async Task<ICollection<StorageResponseDto>> Handle(GetHousesByUserId request, CancellationToken cancellationToken)
@@ -24,14 +27,7 @@ namespace StackBot.Business.Storages.Queries
                 throw new ApplicationException("There were no storages found!");
             }
 
-            var storageDtos = new List<StorageResponseDto>();
-
-            foreach (var storage in storages)
-            {
-                storageDtos.Add(StorageResponseDto.FromStorage(storage));
-            }
-
-            return storageDtos;
+            return _mapper.Map<ICollection<StorageResponseDto>>(storages);
         }
     }
 }
