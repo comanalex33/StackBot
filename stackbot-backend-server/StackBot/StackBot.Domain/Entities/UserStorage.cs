@@ -1,4 +1,6 @@
-﻿namespace Stackbot.DataAccess.Entities
+﻿using StackBot.Domain.Entities;
+
+namespace Stackbot.Domain.Entities
 {
     public class UserStorage
     {

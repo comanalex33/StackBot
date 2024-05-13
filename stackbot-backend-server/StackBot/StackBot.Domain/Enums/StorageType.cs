@@ -1,4 +1,4 @@
-﻿namespace Stackbot.DataAccess.Enums
+﻿namespace StackBot.Domain.Enums
 {
     public enum StorageType
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Stackbot.DataAccess.Entities;
+using Stackbot.Domain.Entities;
 
 namespace Stackbot.DataAccess.Configurations
 {
@@ -11,12 +11,12 @@ namespace Stackbot.DataAccess.Configurations
             builder.HasOne(us => us.User)
                 .WithMany(u => u.UserStorages)
                 .HasForeignKey(us => us.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(us => us.Storage)
                 .WithMany(s => s.UserStorages)
                 .HasForeignKey(us => us.StorageId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

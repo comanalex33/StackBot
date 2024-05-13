@@ -1,6 +1,7 @@
-﻿using Stackbot.DataAccess.Enums;
+﻿using Stackbot.Domain.Entities;
+using StackBot.Domain.Enums;
 
-namespace Stackbot.DataAccess.Entities
+namespace StackBot.Domain.Entities
 {
     public class Storage
     {

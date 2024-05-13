@@ -2,13 +2,15 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Stackbot.DataAccess.Configurations;
-using Stackbot.DataAccess.Entities;
+using Stackbot.Domain.Entities;
+using StackBot.Domain.Entities;
 
 namespace Stackbot.DataAccess
 {
     public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
-        public DbSet<User> Users {  get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserStorage> UserStorage { get; set; } 
         public DbSet<Storage> Storages { get; set; }
         public DbSet<Item> Items { get; set; }
 
