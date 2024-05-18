@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; // Importing icons from Expo Icons
 import { SvgXml } from 'react-native-svg';
@@ -6,16 +6,24 @@ import HouseCard from '../components/cards/HouseCard';
 import FloatingAddButton from '../components/buttons/FloatingAddButton';
 import AddHouseDialog from '../components/dialogs/AddHouseDialog';
 import StorageModel from '../models/StorageModel';
+import { getHouses } from '../services/ApiService/storageService';
 
-const houses = [
-    { id: '1', name: "Alex's House", type: 'house', description: 'Description for House 1', storageId: null },
-    { id: '2', name: "David's House", type: 'house', description: 'Description for House 2', storageId: null },
-    // Add more data as needed
-];
+// House entry example
+//  { id: '1', name: "Alex's House", type: 'house', description: 'Description for House 1', parentStorageId: null } 
 
 const HousesScreen = ({ navigation }) => {
 
     const [dialogVisible, setDialogVisible] = useState(false);
+
+    const [houses, setHouses] = useState([])
+
+    useEffect(() => {
+        getHouses()
+            .then(response => {
+                setHouses(response.data)
+            })
+            .catch(error => console.log(error))
+    }, [])
 
     const toggleDialog = () => {
         setDialogVisible(!dialogVisible);

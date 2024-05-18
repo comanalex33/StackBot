@@ -31,7 +31,7 @@ const ModifyItemDialog = ({ item, visible, onClose, spaceType }) => {
             count: Number(count),
             expirationDate: ( spaceType === StorageTypes.Fridge ) ? date : item.expirationDate,
             warrantyDate: ( spaceType === StorageTypes.Deposit ) ? date : item.warrantyDate,
-            storageId: item.storageId
+            parentStorageId: item.parentStorageId
         })
 
         // TODO - Handle Item update

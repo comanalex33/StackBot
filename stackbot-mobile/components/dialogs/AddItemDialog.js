@@ -33,7 +33,7 @@ const AddItemDialog = ({ visible, onClose, spaceType, spaceId }) => {
             count: Number(count),
             expirationDate: ( spaceType === StorageTypes.Fridge ) ? date : null,
             warrantyDate: ( spaceType === StorageTypes.Deposit ) ? date : null,
-            storageId: spaceId
+            parentparentStorageId: spaceId
         })
 
         // TODO - Handle Item creation

@@ -5,6 +5,8 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../components/buttons/Button';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { login } from '../services/ApiService/userService';
+import { setAuthToken } from '../services/ApiService/api';
 
 const reviewSchema = yup.object({
     email: yup.string()
@@ -24,9 +26,30 @@ export default function LoginScreen({ navigation }) {
         navigation.navigate("Register")
     }
 
-    const handleLogin = (values) => {
-        navigation.navigate("Houses")
-        // TODO - Call Login function
+    const handleLogin = (email, password) => {
+        login(email, password)
+            .then(response => {
+                if(response.status === 401) {
+                    alert("Bad credentials")
+                    return
+                }
+                
+                setAuthToken(response.data.token)
+                navigation.navigate("Houses")
+            })
+            .catch(error => {
+                const response = error.response
+
+                if(!response) {
+                    alert("Something went wrong!")
+                }
+
+                if(response.status === 401) {
+                    alert(response.data.message)
+                } else {
+                    alert("Something went wrong!")
+                }
+            })
     }
 
     return (
@@ -39,7 +62,7 @@ export default function LoginScreen({ navigation }) {
                             validationSchema={reviewSchema}
                             onSubmit={(values, actions) => {
                                 actions.resetForm();
-                                handleLogin(values);
+                                handleLogin(values.email, values.password);
                             }}
                             onReset={() => { }}
                         >

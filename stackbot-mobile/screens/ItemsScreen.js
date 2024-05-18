@@ -8,10 +8,10 @@ import StorageModel from '../models/StorageModel';
 import ItemModel from '../models/ItemModel';
 
 const data = [
-    { id: '1', name: 'Item 1', count: 1, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 1", storageId: null },
-    { id: '2', name: 'Item 2', count: 4, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 2", storageId: null },
-    { id: '3', name: 'Item 3', count: 1, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 3", storageId: null },
-    { id: '4', name: 'Item 4', count: 3, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 4", storageId: null },
+    { id: '1', name: 'Item 1', count: 1, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 1", parentStorageId: null },
+    { id: '2', name: 'Item 2', count: 4, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 2", parentStorageId: null },
+    { id: '3', name: 'Item 3', count: 1, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 3", parentStorageId: null },
+    { id: '4', name: 'Item 4', count: 3, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 4", parentStorageId: null },
     // Add more data as needed
 ];
 

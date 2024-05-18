@@ -21,7 +21,7 @@ const AddRoomDialog = ({ visible, onClose, houseId }) => {
             name: name,
             description: description,
             type: StorageTypes.Room,
-            storageId: houseId
+            parentStorageId: houseId
         })
 
         // TODO - Handle Room creation

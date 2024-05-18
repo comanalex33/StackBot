@@ -23,7 +23,7 @@ const AddSpaceDialog = ({ visible, onClose, roomId }) => {
             name: name,
             description: description,
             type: type,
-            storageId: roomId
+            parentStorageId: roomId
         })
 
         // TODO - Handle Space creation

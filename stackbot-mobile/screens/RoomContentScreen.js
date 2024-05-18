@@ -7,10 +7,10 @@ import '../assets/boxes.png'
 import StorageModel from '../models/StorageModel';
 
 const data = [
-    { id: '1', name: 'Fridge', type: 'fridge', description: 'living for Card 1', storageId: null },
-    { id: '2', name: 'Deposit 1', type: 'deposit', description: 'Bedroom for Card 2', storageId: null },
-    { id: '3', name: 'Deposit 2', type: 'deposit', description: 'Kitchen for Card 3', storageId: null },
-    { id: '4', name: 'Deposit 3', type: 'deposit', description: 'Description for Card 4', storageId: null },
+    { id: '1', name: 'Fridge', type: 'fridge', description: 'living for Card 1', parentStorageId: null },
+    { id: '2', name: 'Deposit 1', type: 'deposit', description: 'Bedroom for Card 2', parentStorageId: null },
+    { id: '3', name: 'Deposit 2', type: 'deposit', description: 'Kitchen for Card 3', parentStorageId: null },
+    { id: '4', name: 'Deposit 3', type: 'deposit', description: 'Description for Card 4', parentStorageId: null },
     // Add more data as needed
 ];
 

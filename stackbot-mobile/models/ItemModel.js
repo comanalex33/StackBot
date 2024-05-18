@@ -1,14 +1,14 @@
 import BaseModel from "./BaseModel";
 
 class ItemModel extends BaseModel {
-    constructor({ id = null, name, description, count, warrantyDate = null, expirationDate = null, storageId } = {}) {
+    constructor({ id = null, name, description, count, warrantyDate = null, expirationDate = null, parentStorageId } = {}) {
         super(id); // Call the constructor of the BaseModel
         this.name = name;
         this.description = description;
         this.count = count;
         this.warrantyDate = warrantyDate;
         this.expirationDate = expirationDate;
-        this.storageId = storageId;
+        this.parentStorageId = parentStorageId;
     }
 
     // Getter methods
@@ -32,7 +32,7 @@ class ItemModel extends BaseModel {
         return this.expirationDate;
     }
 
-    getStorageId() {
+    getParentStorageId() {
         return this.storageId;
     }
 
@@ -57,8 +57,8 @@ class ItemModel extends BaseModel {
         this.expirationDate = expirationDate;
     }
 
-    setStorageId(storageId) {
-        this.storageId = storageId;
+    setParentStorageId(parentStorageId) {
+        this.parentStorageId = parentStorageId;
     }
 }
 

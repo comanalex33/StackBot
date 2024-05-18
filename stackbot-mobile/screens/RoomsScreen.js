@@ -7,19 +7,25 @@ import '../assets/double-bed.png'
 import '../assets/living-room.png'
 import '../assets/door.png'
 import StorageModel from '../models/StorageModel';
+import { getRooms } from '../services/ApiService/storageService';
 
-const data = [
-    { id: '1', name: "Living", type: 'room', description: 'Living Room for Room 1', storageId: null },
-    { id: '2', name: "Bedroom Alex", type: 'room', description: 'Bedroom for Room 2', storageId: null },
-    { id: '3', name: "Kitchen", type: 'room', description: 'Kitchen for Room 3', storageId: null },
-    { id: '4', name: "Storage Closet", type: 'room', description: 'Description for Room 4', storageId: null },
-    // Add more data as needed
-];
+// Room entry example
+//   { id: '1', name: "Living", type: 'room', description: 'Living Room for Room 1', parentStorageId: null }
 
 const RoomsScreen = ({ route, navigation }) => {
 
     const { house } = route.params;
     const houseModel = new StorageModel(house)
+
+    const [rooms, setRooms] = useState([])
+
+    useEffect(() => {
+        getRooms(houseModel.getId())
+            .then(response => {
+                setRooms(response.data)
+            })
+            .catch(error => console.log(error))
+    }, [])
 
     const handleRoomClick = (item) => {
         const room = new StorageModel(item)
@@ -52,7 +58,7 @@ const RoomsScreen = ({ route, navigation }) => {
     return (
         <FlatList
             style={styles.container}
-            data={data}
+            data={rooms}
             renderItem={renderCard}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatListContainer}
