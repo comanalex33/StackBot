@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Stackbot.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace StackBot.Domain.Entities
 {

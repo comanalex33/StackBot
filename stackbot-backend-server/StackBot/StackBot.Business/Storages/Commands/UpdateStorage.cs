@@ -6,7 +6,7 @@ using StackBot.Business.Interfaces;
 
 namespace StackBot.Business.Storages.Commands
 {
-    public record UpdateStorage(string name, UpdateStorageDto updateStorageDto) : IRequest<StorageResponseDto>;
+    public record UpdateStorage(Guid userId, string name, UpdateStorageDto updateStorageDto) : IRequest<StorageResponseDto>;
 
     public class UpdateStorageHandler : IRequestHandler<UpdateStorage, StorageResponseDto>
     {
@@ -21,7 +21,7 @@ namespace StackBot.Business.Storages.Commands
 
         public async Task<StorageResponseDto> Handle(UpdateStorage request, CancellationToken cancellationToken)
         {
-            var storageToUpdate = await _storageRepository.GetStorageByName(request.name);
+            var storageToUpdate = await _storageRepository.GetStorageByName(request.userId, request.name);
 
             if (storageToUpdate == null)
             {

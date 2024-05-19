@@ -6,7 +6,7 @@ using StackBot.Business.Interfaces;
 
 namespace StackBot.Business.Items.Queries
 {
-    public record GetItemsByStorageName(string storageName) : IRequest<ICollection<ItemResponseDto>>;
+    public record GetItemsByStorageName(Guid userId, string storageName) : IRequest<ICollection<ItemResponseDto>>;
 
     public class GetItemsByStorageNameHandler : IRequestHandler<GetItemsByStorageName, ICollection<ItemResponseDto>>
     {
@@ -23,7 +23,7 @@ namespace StackBot.Business.Items.Queries
 
         public async Task<ICollection<ItemResponseDto>> Handle(GetItemsByStorageName request, CancellationToken cancellationToken)
         {
-            var getStorage = await _storageRepostiory.GetStorageByName(request.storageName);
+            var getStorage = await _storageRepostiory.GetStorageByName(request.userId, request.storageName);
 
             if (getStorage == null)
             {

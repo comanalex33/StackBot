@@ -7,7 +7,7 @@ using StackBot.Domain.Entities;
 
 namespace StackBot.Business.Items.Commands
 {
-    public record CreateItem(CreateItemDto createItemRequestDto) : IRequest<ItemResponseDto>;
+    public record CreateItem(Guid userId, CreateItemDto createItemRequestDto) : IRequest<ItemResponseDto>;
 
     public class CreateItemHandler : IRequestHandler<CreateItem, ItemResponseDto>
     {
@@ -23,7 +23,7 @@ namespace StackBot.Business.Items.Commands
         }
         public async Task<ItemResponseDto> Handle(CreateItem request, CancellationToken cancellationToken)
         {
-            var getStorage = await _storageRepostiory.GetStorageByName(request.createItemRequestDto.StorageName);
+            var getStorage = await _storageRepostiory.GetStorageByName(request.userId, request.createItemRequestDto.StorageName);
 
             if (getStorage == null)
             {

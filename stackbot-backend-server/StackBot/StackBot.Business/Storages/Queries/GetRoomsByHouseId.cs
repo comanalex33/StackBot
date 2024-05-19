@@ -5,7 +5,7 @@ using StackBot.Business.Interfaces;
 
 namespace StackBot.Business.Storages.Queries
 {
-    public record GetRoomsByHouseId(Guid parentId) : IRequest<ICollection<StorageResponseDto>>;
+    public record GetRoomsByHouseId(Guid userId, Guid parentId) : IRequest<ICollection<StorageResponseDto>>;
 
     public class GetStoragesByParentIdHandler : IRequestHandler<GetRoomsByHouseId, ICollection<StorageResponseDto>>
     {
@@ -20,7 +20,7 @@ namespace StackBot.Business.Storages.Queries
 
         public async Task<ICollection<StorageResponseDto>> Handle(GetRoomsByHouseId request, CancellationToken cancellationToken)
         {
-            var storages = await _storageRepository.GetRoomsByHouseId(request.parentId);
+            var storages = await _storageRepository.GetRoomsByHouseId(request.userId, request.parentId);
 
             if(storages == null)
             {

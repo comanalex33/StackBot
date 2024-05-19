@@ -6,12 +6,10 @@ namespace StackBot.Business.Interfaces
     {
         Task<Storage> CreateStorage(Storage storage, Guid userId);
         Task<Storage> UpdateStorage(Storage storage);
-        Task DeleteStorageById(Guid storageId);
-        Task<ICollection<Storage>> GetAllStorages();
-        Task<Storage> GetStorageByName(string storageName);
-        Task<int> CountStoragesWithTheSameName(string storageName);
+        Task DeleteStorageById(Guid userId, Guid storageId);
+        Task<Storage> GetStorageByName(Guid userId, string storageName);
         Task<ICollection<Storage>> GetHousesByUserId(Guid userId);
-        Task<ICollection<Storage>> GetRoomsByHouseId(Guid parentId);
-        Task<ICollection<Storage>> GetSubStoragesByRoomId(Guid parentId);
+        Task<ICollection<Storage>> GetRoomsByHouseId(Guid userId, Guid parentId);
+        Task<ICollection<Storage>> GetSubStoragesByRoomId(Guid userId, Guid parentId);
     }
 }

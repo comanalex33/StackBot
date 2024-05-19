@@ -4,7 +4,7 @@ using StackBot.Business.Interfaces;
 
 namespace StackBot.Business.Storages.Commands
 {
-    public record DeleteStorage(string storageName, Guid? parentStorageId) : IRequest<Unit>;
+    public record DeleteStorage(Guid userId, string storageName, Guid? parentStorageId) : IRequest<Unit>;
 
     public class DeleteStorageHandler : IRequestHandler<DeleteStorage, Unit>
     {
@@ -17,24 +17,14 @@ namespace StackBot.Business.Storages.Commands
 
         public async Task<Unit> Handle(DeleteStorage request, CancellationToken cancellationToken)
         {
-            /*if (request.parentStorageId == null)
-            {
-                var storagesCount = await _storageRepository.CountStoragesWithTheSameName(request.storageName);
-
-                if(storagesCount > 1)
-                {
-                    throw new ApplicationException("Exception Error 409: CONFLICT!");
-                }
-            }*/
-
-            var storageToRemove = await _storageRepository.GetStorageByName(request.storageName);
+            var storageToRemove = await _storageRepository.GetStorageByName(request.userId, request.storageName);
 
             if (storageToRemove == null)
             {
                 throw new StorageNotFoundException(request.storageName);
             }
 
-            await _storageRepository.DeleteStorageById(storageToRemove.Id);
+            await _storageRepository.DeleteStorageById(request.userId,storageToRemove.Id);
 
             return Unit.Value;
         }
