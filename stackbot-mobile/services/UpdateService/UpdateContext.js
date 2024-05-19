@@ -1,6 +1,5 @@
 // UpdateContext.js
 import React, { createContext, useState, useContext } from 'react';
-import UpdateTypes from './UpdateTypes';
 
 const UpdateContext = createContext();
 
@@ -15,8 +14,12 @@ export const UpdateProvider = ({ children }) => {
     setUpdates((prevUpdates) => [...prevUpdates, update]);
   };
 
+  const cleanUpdates = () => {
+    setUpdates([])
+  };
+
   return (
-    <UpdateContext.Provider value={{ updates, addUpdate }}>
+    <UpdateContext.Provider value={{ updates, addUpdate, cleanUpdates }}>
       {children}
     </UpdateContext.Provider>
   );

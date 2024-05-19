@@ -8,7 +8,7 @@ const ConfirmLogoutDialog = ({ visible, onClose, onSubmit }) => {
         <CustomDialog visible={visible} onClose={onClose}>
             <Text style={styles.text}>Are you sure you want to log out ?</Text>
             <View style={styles.controls}>
-            <TouchableOpacity onPress={onClose}>
+                <TouchableOpacity onPress={onClose}>
                     <View style={styles.button} backgroundColor="red">
                         <Text style={styles.buttonText}>No</Text>
                     </View>

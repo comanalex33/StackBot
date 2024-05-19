@@ -50,7 +50,7 @@ const StorageCard = ({ storage, icon, onPress }) => {
 
         deleteStorage(storageModel.getName())
             .then(response => {
-                if (response.status !== 200) {
+                if (response.status < 200 || response.status >= 300) {
                     alert(`${response.status}: Something went wrong`)
                     return
                 }

@@ -7,6 +7,8 @@ import '../assets/deposit-item.png'
 import StorageModel from '../models/StorageModel';
 import ItemModel from '../models/ItemModel';
 import { getItemsByStorageName } from '../services/ApiService/itemService';
+import UpdateTypes from '../services/UpdateService/UpdateTypes';
+import { useUpdate } from '../services/UpdateService/UpdateContext';
 
 // Item entry example
 //    { id: '1', name: 'Item 1', count: 1, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 1" }
@@ -18,8 +20,10 @@ const ItemsScreen = ({ route, navigation }) => {
     const roomModel = new StorageModel(room)
     const spaceModel = new StorageModel(space)
 
+    const { updates } = useUpdate();
     const [items, setItems] = useState([])
 
+    // Get items when screen opens
     useEffect(() => {
         getItemsByStorageName(spaceModel.getName())
             .then(response => {
@@ -27,6 +31,23 @@ const ItemsScreen = ({ route, navigation }) => {
             })
             .catch(error => console.log(error))
     }, [])
+
+    // Update items list
+    const updateItemsList = () => {
+        getItemsByStorageName(spaceModel.getName())
+            .then(response => {
+                setItems(response.data)
+            })
+            .catch(error => console.log(error))
+    }
+
+    // Update context
+    useEffect(() => {
+        const latestUpdate = updates[updates.length - 1];
+        if(latestUpdate && latestUpdate === UpdateTypes.TRIGGER_ITEMS_UPDATE) {
+            updateItemsList()
+        }
+    }, [updates])
 
     const handleItemClick = (item) => {
         const itemModel = new ItemModel(item)

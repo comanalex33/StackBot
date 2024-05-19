@@ -39,7 +39,7 @@ const HouseCard = ({ house, onPress, updateHousesList }) => {
   const handleHouseDelete = () => {
     deleteStorage(houseModel.getName())
       .then(response => {
-        if (response.status !== 200) {
+        if (response.status < 200 || response.status >= 300) {
           alert("Something went wrong")
           return
         }

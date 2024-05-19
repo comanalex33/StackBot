@@ -9,14 +9,19 @@ import StorageModel from '../models/StorageModel';
 import ModifyItemDialog from '../components/dialogs/ModifyItemDialog';
 import { formatDate } from '../Helper';
 import DeleteItemDialog from '../components/dialogs/DeleteItemDialog';
+import { deleteItem } from '../services/ApiService/itemService';
+import { useUpdate } from '../services/UpdateService/UpdateContext';
+import UpdateTypes from '../services/UpdateService/UpdateTypes';
 
-const ItemDetailsScreen = ({ route }) => {
+const ItemDetailsScreen = ({ route, navigation }) => {
 
     const { house, room, space, item } = route.params;
     const houseModel = new StorageModel(house)
     const roomModel = new StorageModel(room)
     const spaceModel = new StorageModel(space)
-    const itemModel = new ItemModel(item)
+    const [itemModel, setItemModel] = useState(new ItemModel(item))
+
+    const { addUpdate } = useUpdate();
 
     const [modifyItemDialogVisible, setModifyItemDialogVisible] = useState(false)
     const [deleteItemDialogVisible, setDeleteItemDialogVisible] = useState(false)
@@ -29,6 +34,11 @@ const ItemDetailsScreen = ({ route }) => {
         setDeleteItemDialogVisible(!deleteItemDialogVisible)
     }
 
+    const updateItem = (newItem) => {
+        const newItemModel = new ItemModel(newItem)
+        setItemModel(newItemModel)
+    }
+
     const getIcon = () => {
 
         if (spaceModel.getTypeText() === 'fridge') {
@@ -39,9 +49,30 @@ const ItemDetailsScreen = ({ route }) => {
     }
 
     const handleItemDelete = () => {
-        console.log(`Item ${itemModel.getName()} is deleted`)
+        deleteItem(itemModel.getName())
+            .then(response => {
+                if (response.status < 200 || response.status >= 300) {
+                    alert(`${response.status}: Something went wrong`)
+                    return
+                }
 
-        // TODO - Handle Item deletion
+                console.log(`Item ${itemModel.getName()} is deleted`)
+                addUpdate(UpdateTypes.TRIGGER_ITEMS_UPDATE)
+                navigation.goBack()
+            })
+            .catch(error => {
+                const response = error.response
+
+                if (!response) {
+                    alert("Something went wrong!")
+                }
+
+                if ('message' in response.data) {
+                    alert(`${response.status}: ${response.data.message}`)
+                } else {
+                    alert(`${response.status}: Something went wrong!`)
+                }
+            })
     }
 
     return (
@@ -81,7 +112,7 @@ const ItemDetailsScreen = ({ route }) => {
             </View>
 
             {/* Modify Item Dialog */}
-            <ModifyItemDialog item={itemModel} visible={modifyItemDialogVisible} onClose={toggleModifyItemDialog} spaceType={spaceModel.getTypeText()} />
+            <ModifyItemDialog item={itemModel} visible={modifyItemDialogVisible} onClose={toggleModifyItemDialog} spaceType={spaceModel.getTypeText()} updateCurrentItem={updateItem} />
 
             {/* Delete Item Dialog */}
             <DeleteItemDialog item={itemModel} visible={deleteItemDialogVisible} onClose={toggleDeleteItemDialog} onSubmit={handleItemDelete} />

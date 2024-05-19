@@ -7,11 +7,15 @@ import FloatingAddButton from '../components/buttons/FloatingAddButton';
 import AddHouseDialog from '../components/dialogs/AddHouseDialog';
 import StorageModel from '../models/StorageModel';
 import { getHouses } from '../services/ApiService/storageService';
+import { useUpdate } from '../services/UpdateService/UpdateContext';
+import UpdateTypes from '../services/UpdateService/UpdateTypes';
 
 // House entry example
 //  { id: '1', name: "Alex's House", type: 0, description: 'Description for House 1', parentStorageId: null } 
 
 const HousesScreen = ({ navigation }) => {
+
+    const { updates, cleanUpdates } = useUpdate();
 
     const [dialogVisible, setDialogVisible] = useState(false);
 
@@ -25,6 +29,15 @@ const HousesScreen = ({ navigation }) => {
             })
             .catch(error => console.log(error))
     }, [])
+
+    // Update context
+    useEffect(() => {
+        const latestUpdate = updates[updates.length - 1];
+        if (latestUpdate && latestUpdate === UpdateTypes.TRIGGER_LOGOUT) {
+            navigation.goBack()
+            cleanUpdates()
+        }
+    }, [updates])
 
     // Update houses list
     const updateHousesList = () => {

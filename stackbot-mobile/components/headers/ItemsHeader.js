@@ -55,7 +55,7 @@ const ItemsHeader = ({ route }) => {
             </View>
 
             {/* Add Item Dialog */}
-            <AddItemDialog visible={addItemDialogVisible} onClose={toggleAddItemDialog} spaceType={spaceModel.getType()}/>
+            <AddItemDialog visible={addItemDialogVisible} onClose={toggleAddItemDialog} spaceType={spaceModel.getTypeText()} space={spaceModel}/>
 
             {/* See Members Dialog */}
             <MembersDialog visible={membersDialogVisible} onClose={toggleMembersDialog}/>
