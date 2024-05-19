@@ -31,7 +31,7 @@ namespace Stackbot.DataAccess.Repositories
 
             if (!result.Succeeded)
             {
-                throw new Exception("User creation failed!");
+                throw new ApplicationException("User creation failed!");
             }
             return user;
         }

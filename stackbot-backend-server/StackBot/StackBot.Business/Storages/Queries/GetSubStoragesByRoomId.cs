@@ -27,11 +27,6 @@ namespace StackBot.Business.Storages.Queries
         {
             var storages = await _storageRepository.GetSubStoragesByRoomId(request.userId, request.parentId);
 
-            if (storages == null)
-            {
-                throw new ApplicationException("No storages were found for the given parent storage!");
-            }
-
             return _mapper.Map<ICollection<StorageResponseDto>>(storages);
 
         }

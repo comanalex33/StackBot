@@ -52,17 +52,12 @@ namespace Stackbot.DataAccess.Repositories
 
             if (storageForDelete == null)
             {
-                throw new ApplicationException("Storage not found!");
+                throw new EntityNotFoundException(nameof(Storage), storageId);
             }
 
             var userStorages = await _context.UserStorage
                                              .Where(us => us.UserId == userId && us.StorageId == storageId)
                                              .ToListAsync();
-
-            if (!userStorages.Any())
-            {
-                throw new ApplicationException("User does not have permission to delete this storage!");
-            }
 
             _context.UserStorage.RemoveRange(userStorages);
             _context.Storages.Remove(storageForDelete);
@@ -94,7 +89,7 @@ namespace Stackbot.DataAccess.Repositories
 
             if (storageForUpdate == null)
             {
-                throw new ApplicationException("Storage not found!");
+                throw new EntityNotFoundException(nameof(Storage), storage.Name);
             }
 
             _context.Storages.Update(storage);

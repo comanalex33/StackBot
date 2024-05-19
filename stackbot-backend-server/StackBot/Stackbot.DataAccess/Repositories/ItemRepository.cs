@@ -36,7 +36,7 @@ namespace Stackbot.DataAccess.Repositories
 
             if (itemForDelete == null)
             {
-                throw new ApplicationException("Item not found!");
+                throw new EntityNotFoundException(nameof(Item), itemId);
             }
 
             _context.Items.Remove(itemForDelete);
@@ -83,7 +83,7 @@ namespace Stackbot.DataAccess.Repositories
 
             if (itemForUpdate == null)
             {
-                throw new ApplicationException("Item not found!");
+                throw new EntityNotFoundException(nameof(Item), item.Name);
             }
 
             _context.Items.Update(item);
