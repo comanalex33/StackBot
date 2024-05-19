@@ -7,6 +7,8 @@ using StackBot.Business.Dtos.StorageDtos;
 using StackBot.Business.Items.Queries;
 using StackBot.Business.Storages.Commands;
 using StackBot.Business.Storages.Queries;
+using StackBot.Domain.Entities;
+using System.Xml.Linq;
 
 namespace StackBot.Api.Controllers
 {
@@ -40,6 +42,17 @@ namespace StackBot.Api.Controllers
             var userId = HttpContext.GetUserIdClaimValue();
 
             var command = new DeleteStorage(userId, name, parentStorageId);
+            await _mediator.Send(command);
+
+            return NoContent();
+        }
+
+        [HttpPost("houses/{houseId}/users/{email}")]
+        public async Task<IActionResult> AddUserToHouse(Guid houseId, string email)
+        {
+            var ownerId = HttpContext.GetUserIdClaimValue();
+
+            var command = new AddUserToHouse(ownerId, houseId, email);
             await _mediator.Send(command);
 
             return NoContent();
