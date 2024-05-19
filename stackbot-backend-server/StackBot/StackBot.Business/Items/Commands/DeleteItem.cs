@@ -3,7 +3,7 @@ using StackBot.Business.Interfaces;
 
 namespace StackBot.Business.Items.Commands
 {
-    public record DeleteItem(string name) : IRequest<Unit>;
+    public record DeleteItem(Guid userId, string name) : IRequest<Unit>;
 
     public class DeleteItemHandler : IRequestHandler<DeleteItem, Unit>
     {
@@ -16,7 +16,7 @@ namespace StackBot.Business.Items.Commands
 
         public async Task<Unit> Handle(DeleteItem request, CancellationToken cancellationToken)
         {
-            var itemToRemove = await _itemRepository.GetItemByName(request.name);
+            var itemToRemove = await _itemRepository.GetItemByName(request.userId, request.name);
 
             await _itemRepository.DeleteItemById(itemToRemove.Id);
 

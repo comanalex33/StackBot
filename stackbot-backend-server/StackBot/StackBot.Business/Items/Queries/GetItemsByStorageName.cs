@@ -30,7 +30,7 @@ namespace StackBot.Business.Items.Queries
                 throw new StorageNotFoundException(request.storageName);
             }
 
-            var items = await _itemRepository.GetAllItemsByStorageId(getStorage.Id);
+            var items = await _itemRepository.GetAllItemsByStorageId(request.userId, getStorage.Id);
 
             return _mapper.Map<ICollection<ItemResponseDto>>(items);
         }

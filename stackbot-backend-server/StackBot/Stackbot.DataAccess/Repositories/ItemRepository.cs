@@ -16,7 +16,9 @@ namespace Stackbot.DataAccess.Repositories
 
         public async Task<Item> CreateItem(Item item)
         {
-            if (_context.Items.Any(i => i.Name == item.Name))
+            var itemFound = await _context.Items.Where(i => i.StorageId == item.StorageId && item.Name.Equals(i.Name)).FirstOrDefaultAsync();
+
+            if (itemFound != null)
             {
                 throw new EntityAlreadyExistsException(nameof(Item), item.Name);
             }
@@ -47,19 +49,25 @@ namespace Stackbot.DataAccess.Repositories
             return await _context.Items.ToListAsync();
         }
 
-        public async Task<ICollection<Item>> GetAllItemsContainingName(string itemName)
+        public async Task<ICollection<Item>> GetAllItemsContainingName(Guid userId, string itemName)
         {
-            return await _context.Items.Where(i => i.Name.ToLower().Contains(itemName.ToLower())).ToListAsync();
+            var userStorages = await _context.UserStorage.Where(us => us.UserId == userId).Select(us => us.StorageId).ToListAsync();
+
+            return await _context.Items.Where(i => i.Name.ToLower().Contains(itemName.ToLower()) && userStorages.Contains(i.StorageId)).ToListAsync();
         }
 
-        public async Task<ICollection<Item>> GetAllItemsByStorageId(Guid storageId)
+        public async Task<ICollection<Item>> GetAllItemsByStorageId(Guid userId, Guid storageId)
         {
-            return await _context.Items.Where(i => i.StorageId == storageId).ToListAsync();
+            var userStorages = await _context.UserStorage.Where(us => us.UserId == userId).Select(us => us.StorageId).ToListAsync();
+
+            return await _context.Items.Where(i => i.StorageId == storageId && userStorages.Contains(i.StorageId)).ToListAsync();
         }
 
-        public async Task<Item> GetItemByName(string name)
+        public async Task<Item> GetItemByName(Guid userId, string name)
         {
-            var getItem = await _context.Items.FirstOrDefaultAsync(i => i.Name == name);
+            var userStorages = await _context.UserStorage.Where(us => us.UserId == userId).Select(us => us.StorageId).ToListAsync();
+
+            var getItem = await _context.Items.FirstOrDefaultAsync(i => i.Name == name && userStorages.Contains(i.StorageId));
 
             if (getItem == null)
             {
@@ -71,11 +79,6 @@ namespace Stackbot.DataAccess.Repositories
 
         public async Task<Item> UpdateItemById(Item item)
         {
-            if (_context.Items.Any(i => i.Name == item.Name))
-            {
-                throw new EntityAlreadyExistsException(nameof(Item), item.Name);
-            }
-
             var itemForUpdate = await _context.Items.FirstOrDefaultAsync(i => i.Id == item.Id);
 
             if (itemForUpdate == null)

@@ -35,7 +35,9 @@ namespace StackBot.Api.Controllers
         [HttpDelete("{itemName}")]
         public async Task<IActionResult> DeleteItem(string itemName)
         {
-            var command = new DeleteItem(itemName);
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new DeleteItem(userId, itemName);
             await _mediator.Send(command);
 
             return NoContent();
@@ -44,7 +46,9 @@ namespace StackBot.Api.Controllers
         [HttpGet("{itemName}")]
         public async Task<IActionResult> GetItemsContainingName(string itemName)
         {
-            var command = new GetItemsContainingName(itemName);
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new GetItemsContainingName(userId, itemName);
             var response = await _mediator.Send(command);
 
             return Ok(response);
@@ -53,7 +57,9 @@ namespace StackBot.Api.Controllers
         [HttpPut("{name}")]
         public async Task<IActionResult> UpdateItem(string name, UpdateItemDto updateItemDto)
         {
-            var command = new UpdateItem(name, updateItemDto);
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new UpdateItem(userId, name, updateItemDto);
             var response = await _mediator.Send(command);
 
             return Ok(response);
