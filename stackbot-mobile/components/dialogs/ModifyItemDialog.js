@@ -3,11 +3,11 @@ import { Text, StyleSheet, TextInput, View, TouchableOpacity } from 'react-nativ
 import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import StorageTypes from '../../models/StorageTypes';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import DateButton from '../buttons/DateButton';
 import { formatDate } from '../../Helper';
 import ItemModel from '../../models/ItemModel';
+import { StorageTypes } from '../../models/StorageTypes';
 
 // Setup validation schema using Yup
 const validationSchema = Yup.object({

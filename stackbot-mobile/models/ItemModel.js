@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel";
 
 class ItemModel extends BaseModel {
-    constructor({ id = null, name, description, count, warrantyDate = null, expirationDate = null, parentStorageId } = {}) {
+    constructor({ id = null, name, description, count, warrantyDate = null, expirationDate = null, parentStorageId = null } = {}) {
         super(id); // Call the constructor of the BaseModel
         this.name = name;
         this.description = description;

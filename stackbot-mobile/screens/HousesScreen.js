@@ -9,7 +9,7 @@ import StorageModel from '../models/StorageModel';
 import { getHouses } from '../services/ApiService/storageService';
 
 // House entry example
-//  { id: '1', name: "Alex's House", type: 'house', description: 'Description for House 1', parentStorageId: null } 
+//  { id: '1', name: "Alex's House", type: 0, description: 'Description for House 1', parentStorageId: null } 
 
 const HousesScreen = ({ navigation }) => {
 

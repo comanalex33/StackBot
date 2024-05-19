@@ -4,7 +4,7 @@ import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import StorageModel from '../../models/StorageModel';
-import StorageTypes from '../../models/StorageTypes';
+import { StorageTypeIndexFromName, StorageTypes } from '../../models/StorageTypes';
 
 // Setup validation schema using Yup
 const validationSchema = Yup.object({
@@ -20,7 +20,7 @@ const AddHouseDialog = ({ visible, onClose }) => {
         const house = new StorageModel({
             name: name,
             description: description,
-            type: StorageTypes.House
+            type: StorageTypeIndexFromName.house
         })
 
         // TODO - Handle House creation

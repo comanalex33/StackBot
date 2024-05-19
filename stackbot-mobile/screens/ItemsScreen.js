@@ -6,14 +6,10 @@ import '../assets/fridge-item.png'
 import '../assets/deposit-item.png'
 import StorageModel from '../models/StorageModel';
 import ItemModel from '../models/ItemModel';
+import { getItemsByStorageName } from '../services/ApiService/itemService';
 
-const data = [
-    { id: '1', name: 'Item 1', count: 1, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 1", parentStorageId: null },
-    { id: '2', name: 'Item 2', count: 4, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 2", parentStorageId: null },
-    { id: '3', name: 'Item 3', count: 1, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 3", parentStorageId: null },
-    { id: '4', name: 'Item 4', count: 3, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 4", parentStorageId: null },
-    // Add more data as needed
-];
+// Item entry example
+//    { id: '1', name: 'Item 1', count: 1, warrantyDate: '2024-06-14T18:03:00.000Z', expirationDate: '2024-06-14T18:03:00.000Z', description: "Description for Item 1" }
 
 const ItemsScreen = ({ route, navigation }) => {
 
@@ -21,6 +17,16 @@ const ItemsScreen = ({ route, navigation }) => {
     const houseModel = new StorageModel(house)
     const roomModel = new StorageModel(room)
     const spaceModel = new StorageModel(space)
+
+    const [items, setItems] = useState([])
+
+    useEffect(() => {
+        getItemsByStorageName(spaceModel.getName())
+            .then(response => {
+                setItems(response.data)
+            })
+            .catch(error => console.log(error))
+    }, [])
 
     const handleItemClick = (item) => {
         const itemModel = new ItemModel(item)
@@ -45,7 +51,7 @@ const ItemsScreen = ({ route, navigation }) => {
     return (
         <FlatList
             style={styles.container}
-            data={data}
+            data={items}
             renderItem={renderCard}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.flatListContainer}

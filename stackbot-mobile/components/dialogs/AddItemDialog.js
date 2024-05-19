@@ -3,8 +3,7 @@ import { Text, StyleSheet, TextInput, View, TouchableOpacity, Button } from 'rea
 import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import StorageModel from '../../models/StorageModel';
-import StorageTypes from '../../models/StorageTypes';
+import { StorageTypes } from '../../models/StorageTypes';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import DateButton from '../buttons/DateButton';
 import { formatDate } from '../../Helper';
@@ -33,7 +32,7 @@ const AddItemDialog = ({ visible, onClose, spaceType, spaceId }) => {
             count: Number(count),
             expirationDate: ( spaceType === StorageTypes.Fridge ) ? date : null,
             warrantyDate: ( spaceType === StorageTypes.Deposit ) ? date : null,
-            parentparentStorageId: spaceId
+            parentStorageId: spaceId
         })
 
         // TODO - Handle Item creation

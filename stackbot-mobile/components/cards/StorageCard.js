@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import DeleteStorageDialog from '../dialogs/DeleteStorageDialog';
 import StorageModel from '../../models/StorageModel';
-import StorageTypes from '../../models/StorageTypes';
+import { StorageTypes } from '../../models/StorageTypes';
 import ModifyStorageDialog from '../dialogs/ModifyStorageDialog';
 
 const StorageCard = ({ storage, icon, onPress }) => {

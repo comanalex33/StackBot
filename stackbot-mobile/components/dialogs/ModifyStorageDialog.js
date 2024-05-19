@@ -3,7 +3,7 @@ import { Text, StyleSheet, TextInput, View, TouchableOpacity } from 'react-nativ
 import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import StorageTypes from '../../models/StorageTypes';
+import { StorageTypes } from '../../models/StorageTypes';
 import StorageModel from '../../models/StorageModel';
 
 // Setup validation schema using Yup
@@ -19,20 +19,20 @@ const ModifyStorageDialog = ({ storage, visible, onClose }) => {
     const storageModel = new StorageModel(storage)
 
     const handleUpdateStorage = (name, description) => {
-        const updatedStorage = houseModel
+        const updatedStorage = storageModel
         updatedStorage.setName(name)
         updatedStorage.setDescription(description)
 
         // TODO - Handle Storage update
-        if (!updatedStorage.isEqual(house)) {
+        if (!updatedStorage.isEqual(storage)) {
             console.log("Something changed")
             console.log(updatedStorage)
 
-            if (storageModel.getType() === StorageTypes.House) {
+            if (storageModel.getTypeText() === StorageTypes.House) {
                 // House
-            } else if (storageModel.getType() === StorageTypes.Room) {
+            } else if (storageModel.getTypeText() === StorageTypes.Room) {
                 // Room
-            } else if (storageModel.getType() === StorageTypes.Deposit) {
+            } else if (storageModel.getTypeText() === StorageTypes.Deposit) {
                 // Deposit
             } else {
                 // Fridge
@@ -41,11 +41,11 @@ const ModifyStorageDialog = ({ storage, visible, onClose }) => {
     }
 
     const getStorageTypeName = () => {
-        if (storageModel.getType() === StorageTypes.House) {
+        if (storageModel.getTypeText() === StorageTypes.House) {
             return "House"
-        } else if (storageModel.getType() === StorageTypes.Room) {
+        } else if (storageModel.getTypeText() === StorageTypes.Room) {
             return "Room"
-        } else if (storageModel.getType() === StorageTypes.Deposit) {
+        } else if (storageModel.getTypeText() === StorageTypes.Deposit) {
             return "Deposit"
         } else {
             return "Fridge"

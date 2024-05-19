@@ -1,4 +1,5 @@
 import BaseModel from "./BaseModel";
+import { StorageTypeFromIndex } from "./StorageTypes";
 
 class StorageModel extends BaseModel {
     constructor({ id = null, name, type, description, parentStorageId = null } = {}) {
@@ -16,6 +17,10 @@ class StorageModel extends BaseModel {
 
     getType() {
         return this.type;
+    }
+
+    getTypeText() {
+        return StorageTypeFromIndex[this.type]
     }
 
     getDescription() {

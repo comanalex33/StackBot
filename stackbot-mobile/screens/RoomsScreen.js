@@ -10,7 +10,7 @@ import StorageModel from '../models/StorageModel';
 import { getRooms } from '../services/ApiService/storageService';
 
 // Room entry example
-//   { id: '1', name: "Living", type: 'room', description: 'Living Room for Room 1', parentStorageId: null }
+//   { id: '1', name: "Living", type: 1, description: 'Living Room for Room 1', parentStorageId: null }
 
 const RoomsScreen = ({ route, navigation }) => {
 

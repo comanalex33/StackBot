@@ -31,7 +31,7 @@ const ItemDetailsScreen = ({ route }) => {
 
     const getIcon = () => {
 
-        if (space.type === 'fridge') {
+        if (spaceModel.getTypeText() === 'fridge') {
             return require('../assets/fridge-item.png')
         }
 
@@ -59,7 +59,7 @@ const ItemDetailsScreen = ({ route }) => {
             </View>
             <View style={styles.content}>
                 <ItemDetailCard title={"Count"} value={itemModel.getCount()} />
-                {(space.type === 'fridge') ?
+                {(spaceModel.getTypeText() === 'fridge') ?
                     <ItemDetailCard title={"Expiration Date"} value={formatDate(itemModel.getExpirationDate())} />
                     :
                     <ItemDetailCard title={"Warranty Date"} value={formatDate(itemModel.getWarrantyDate())} />
@@ -81,7 +81,7 @@ const ItemDetailsScreen = ({ route }) => {
             </View>
 
             {/* Modify Item Dialog */}
-            <ModifyItemDialog item={itemModel} visible={modifyItemDialogVisible} onClose={toggleModifyItemDialog} spaceType={spaceModel.getType()} />
+            <ModifyItemDialog item={itemModel} visible={modifyItemDialogVisible} onClose={toggleModifyItemDialog} spaceType={spaceModel.getTypeText()} />
 
             {/* Delete Item Dialog */}
             <DeleteItemDialog item={itemModel} visible={deleteItemDialogVisible} onClose={toggleDeleteItemDialog} onSubmit={handleItemDelete} />
