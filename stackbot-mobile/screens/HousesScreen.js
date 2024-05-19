@@ -17,6 +17,7 @@ const HousesScreen = ({ navigation }) => {
 
     const [houses, setHouses] = useState([])
 
+    // Get houses when screen opens
     useEffect(() => {
         getHouses()
             .then(response => {
@@ -24,6 +25,15 @@ const HousesScreen = ({ navigation }) => {
             })
             .catch(error => console.log(error))
     }, [])
+
+    // Update houses list
+    const updateHousesList = () => {
+        getHouses()
+            .then(response => {
+                setHouses(response.data)
+            })
+            .catch(error => console.log(error))
+    }
 
     const toggleDialog = () => {
         setDialogVisible(!dialogVisible);
@@ -36,7 +46,7 @@ const HousesScreen = ({ navigation }) => {
 
     const renderCard = ({ item }) => (
         <View style={styles.cardContainer}>
-            <HouseCard house={item} onPress={() => handleHouseClick(item)} />
+            <HouseCard house={item} onPress={() => handleHouseClick(item)} updateHousesList={updateHousesList} />
         </View>
     );
 
@@ -72,7 +82,7 @@ const HousesScreen = ({ navigation }) => {
             <FloatingAddButton onPress={toggleDialog} />
 
             {/* Add House Dialog */}
-            <AddHouseDialog visible={dialogVisible} onClose={toggleDialog} />
+            <AddHouseDialog visible={dialogVisible} onClose={toggleDialog} updateHousesList={updateHousesList} />
         </View>
     )
 }
