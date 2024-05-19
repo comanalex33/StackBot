@@ -4,7 +4,10 @@ import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import StorageModel from '../../models/StorageModel';
-import { StorageTypes } from '../../models/StorageTypes';
+import { StorageTypeIndexFromName, StorageTypes } from '../../models/StorageTypes';
+import { addStorage } from '../../services/ApiService/storageService';
+import { useUpdate } from '../../services/UpdateService/UpdateContext';
+import UpdateTypes from '../../services/UpdateService/UpdateTypes';
 
 // Setup validation schema using Yup
 const validationSchema = Yup.object({
@@ -14,18 +17,35 @@ const validationSchema = Yup.object({
         .required('Description is required'),
 });
 
-const AddRoomDialog = ({ visible, onClose, houseId }) => {
+const AddRoomDialog = ({ visible, onClose, house }) => {
+
+    const houseModel = new StorageModel(house)
+
+    const { addUpdate } = useUpdate();
 
     const handleCreateRoom = (name, description) => {
-        const room = new StorageModel({
-            name: name,
-            description: description,
-            type: StorageTypes.Room,
-            parentStorageId: houseId
-        })
+        addStorage(name, StorageTypeIndexFromName.room, description, houseModel.getName())
+            .then(response => {
+                if (response.status !== 200) {
+                    alert(`${response.status}: Something went wrong`)
+                    return
+                }
 
-        // TODO - Handle Room creation
-        console.log(room)
+                addUpdate(UpdateTypes.TRIGGER_ROOMS_UPDATE)
+            })
+            .catch(error => {
+                const response = error.response
+
+                if (!response) {
+                    alert("Something went wrong!")
+                }
+
+                if ('message' in response.data) {
+                    alert(`${response.status}: ${response.data.message}`)
+                } else {
+                    alert(`${response.status}: Something went wrong!`)
+                }
+            })
     }
 
     return (

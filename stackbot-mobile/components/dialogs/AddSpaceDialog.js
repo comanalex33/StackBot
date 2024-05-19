@@ -4,7 +4,10 @@ import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import StorageModel from '../../models/StorageModel';
-import { StorageTypes } from '../../models/StorageTypes';
+import { StorageTypeIndexFromName, StorageTypes } from '../../models/StorageTypes';
+import { useUpdate } from '../../services/UpdateService/UpdateContext';
+import { addStorage } from '../../services/ApiService/storageService';
+import UpdateTypes from '../../services/UpdateService/UpdateTypes';
 
 // Setup validation schema using Yup
 const validationSchema = Yup.object({
@@ -16,18 +19,35 @@ const validationSchema = Yup.object({
         .required('Type is required'),
 });
 
-const AddSpaceDialog = ({ visible, onClose, roomId }) => {
+const AddSpaceDialog = ({ visible, onClose, room }) => {
+
+    const roomModel = new StorageModel(room)
+
+    const { addUpdate } = useUpdate();
 
     const handleCreateSpace = (name, description, type) => {
-        const space = new StorageModel({
-            name: name,
-            description: description,
-            type: type,
-            parentStorageId: roomId
-        })
+        addStorage(name, StorageTypeIndexFromName[type], description, roomModel.getName())
+            .then(response => {
+                if (response.status !== 200) {
+                    alert(`${response.status}: Something went wrong`)
+                    return
+                }
 
-        // TODO - Handle Space creation
-        console.log(space)
+                addUpdate(UpdateTypes.TRIGGER_SUBSTORAGES_UPDATE)
+            })
+            .catch(error => {
+                const response = error.response
+
+                if (!response) {
+                    alert("Something went wrong!")
+                }
+
+                if ('message' in response.data) {
+                    alert(`${response.status}: ${response.data.message}`)
+                } else {
+                    alert(`${response.status}: Something went wrong!`)
+                }
+            })
     }
 
     return (
@@ -37,7 +57,6 @@ const AddSpaceDialog = ({ visible, onClose, roomId }) => {
                 initialValues={{ name: '', description: '', type: '' }}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    console.log(values.type)
                     handleCreateSpace(values.name, values.description, values.type)
                     onClose(); // Close the dialog on successful submission
                 }}
