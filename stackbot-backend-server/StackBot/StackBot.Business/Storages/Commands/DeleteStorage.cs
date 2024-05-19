@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Stackbot.DataAccess.Exceptions;
 using StackBot.Business.Interfaces;
+using StackBot.Domain.Enums;
 
 namespace StackBot.Business.Storages.Commands
 {
@@ -24,7 +25,34 @@ namespace StackBot.Business.Storages.Commands
                 throw new StorageNotFoundException(request.storageName);
             }
 
-            await _storageRepository.DeleteStorageById(request.userId,storageToRemove.Id);
+            if (storageToRemove.Type == StorageType.House)
+            {
+                var subStorages = await _storageRepository.GetRoomsByHouseId(request.userId, storageToRemove.Id);
+
+                foreach (var subStorage in subStorages)
+                {
+                    var subSubStorages = await _storageRepository.GetSubStoragesByRoomId(request.userId, subStorage.Id);
+
+                    foreach (var subSubStorage in subSubStorages)
+                    {
+                        await _storageRepository.DeleteStorageById(request.userId, subSubStorage.Id);
+                    }
+
+                    await _storageRepository.DeleteStorageById(request.userId, subStorage.Id);
+                }
+            }
+
+            if (storageToRemove.Type == StorageType.Room)
+            {
+                var subStorages = await _storageRepository.GetSubStoragesByRoomId(request.userId, storageToRemove.Id);
+
+                foreach (var subStorage in subStorages)
+                {
+                    await _storageRepository.DeleteStorageById(request.userId, subStorage.Id);
+                }
+            }
+
+            await _storageRepository.DeleteStorageById(request.userId, storageToRemove.Id);
 
             return Unit.Value;
         }

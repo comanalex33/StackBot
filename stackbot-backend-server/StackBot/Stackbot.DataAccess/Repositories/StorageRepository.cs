@@ -55,10 +55,16 @@ namespace Stackbot.DataAccess.Repositories
                 throw new ApplicationException("Storage not found!");
             }
 
-            var userStorages = await _context.UserStorage.Where(us => us.UserId == userId && us.StorageId == storageId).ToListAsync();
+            var userStorages = await _context.UserStorage
+                                             .Where(us => us.UserId == userId && us.StorageId == storageId)
+                                             .ToListAsync();
+
+            if (!userStorages.Any())
+            {
+                throw new ApplicationException("User does not have permission to delete this storage!");
+            }
 
             _context.UserStorage.RemoveRange(userStorages);
-
             _context.Storages.Remove(storageForDelete);
 
             await _context.SaveChangesAsync();
@@ -136,6 +142,5 @@ namespace Stackbot.DataAccess.Repositories
 
             return storages.Where(s => s.ParentStorageId == parentId && (s.Type == StorageType.Deposit || s.Type == StorageType.Fridge)).ToList();
         }
-
     }
 }
