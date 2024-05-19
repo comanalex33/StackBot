@@ -56,7 +56,7 @@ namespace StackBot.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("rooms/{houseId}")]
+        [HttpGet("{houseId}/rooms")]
         public async Task<IActionResult> GetRoomsByHouseId(Guid houseId)
         {
             var userId = HttpContext.GetUserIdClaimValue();
@@ -67,7 +67,7 @@ namespace StackBot.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("substorages/{roomId}")]
+        [HttpGet("{roomId}/substorages")]
         public async Task<IActionResult> GetSubStoragesByRoomId(Guid roomId)
         {
             var userId = HttpContext.GetUserIdClaimValue();
