@@ -57,23 +57,23 @@ def process_message(message,jwt_token):
     if  re.search(r"(how many|number of) (item|product|thing)s? (are|in)", message.lower()) and store_name:
         # Case 1: How many items are in the store <store_name>
         print("Case 1 How many items are in the store " , store_name)
-        return case1(store_name,jwt_token);
+        return case1(store_name,jwt_token)
     elif re.search(r"(add|put|place)(.*?) (to|in|into)", message.lower()) and item and store_name:
         # Case 2: Add item <item> to the store <store_name>
         print("Case 2: Add item:", item," to the store:", store_name, "quantity:",q)
-        return case2(item,store_name,q,jwt_token);
+        return case2(item,store_name,q,jwt_token)
     elif re.search(r"(delete|remove|erase)(.*?) (from|out of)", message.lower()) and store_name:
         #Case 3: Remove item <item> from store <store_name>
         if item:
             print("Case 3: Remove item:", item," from the store:", store_name, "quantity:",q)
-            return case3(item,store_name,q,jwt_token);
+            return case3(item,store_name,q,jwt_token)
         elif root:
             print("Case 3: Remove item:", root," from the store:", store_name, "quantity:",q)
-            return case3(root,store_name,q,jwt_token);
+            return case3(root,store_name,q,jwt_token)
     elif re.search(r"(all|every)(.*?) (item|product|thing)s? in", message.lower()):
         # Case 4: Display all items in <store_name>
         print("Case 4: Display all items")
-        return case4(store_name,jwt_token);
+        return case4(store_name,jwt_token)
     else:
         print("Ask again")
         return "The command was not clear. The options are to: add an item to a specific store, delete an item from a specific store, or ask to display all items in a specific store or to display the number of items"
@@ -188,15 +188,15 @@ def case4(store_name,jwt_token):
 
 def run_server():
     # Set up server settings
-    server_address = ('localhost', 8443)  # Customize port and host if needed
+    server_address = ('0.0.0.0', 8443)  # Customize port and host if needed
     httpd = HTTPServer(server_address, RequestHandler)
 
     # Load SSL certificate and key
-    certfile = './cert.pem'  # Update with your certificate file path
-    keyfile = './key.pem'     # Update with your private key file path
+    # certfile = './cert.pem'  # Update with your certificate file path
+    # keyfile = './key.pem'     # Update with your private key file path
 
     # Start the server with SSL/TLS support
-    httpd.socket = ssl.wrap_socket(httpd.socket, certfile=certfile, keyfile=keyfile, server_side=True)
+    # httpd.socket = ssl.wrap_socket(httpd.socket, certfile=certfile, keyfile=keyfile, server_side=True)
 
     print('Starting server...')
     try:
