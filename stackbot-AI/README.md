@@ -9,7 +9,7 @@
 ## Run Backend AI
 
 ```sh
-    docker run -d -p 80:8443 --name backend_ai backend_ai:1.0
+    docker run -d -p 80:8443 --restart always --name backend_ai backend_ai:1.0
 ```
 
 ### Check server

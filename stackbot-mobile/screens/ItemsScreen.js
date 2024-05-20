@@ -6,7 +6,7 @@ import '../assets/fridge-item.png'
 import '../assets/deposit-item.png'
 import StorageModel from '../models/StorageModel';
 import ItemModel from '../models/ItemModel';
-import { getItemsByStorageName } from '../services/ApiService/itemService';
+import { getItemsByStorageName } from '../services/ApiService/storageService';
 import UpdateTypes from '../services/UpdateService/UpdateTypes';
 import { useUpdate } from '../services/UpdateService/UpdateContext';
 
