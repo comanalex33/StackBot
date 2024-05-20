@@ -7,8 +7,6 @@ using StackBot.Business.Dtos.StorageDtos;
 using StackBot.Business.Items.Queries;
 using StackBot.Business.Storages.Commands;
 using StackBot.Business.Storages.Queries;
-using StackBot.Domain.Entities;
-using System.Xml.Linq;
 
 namespace StackBot.Api.Controllers
 {
@@ -45,6 +43,17 @@ namespace StackBot.Api.Controllers
             await _mediator.Send(command);
 
             return NoContent();
+        }
+
+        [HttpGet("houses/{houseId}/users")]
+        public async Task<IActionResult> GetUsersByHouseId(Guid houseId)
+        {
+            var ownerId = HttpContext.GetUserIdClaimValue();
+
+            var command = new GetUsersByHouseId(ownerId, houseId);
+            var response = await _mediator.Send(command);
+
+            return Ok(response);
         }
 
         [HttpPost("houses/{houseId}/users/{email}")]

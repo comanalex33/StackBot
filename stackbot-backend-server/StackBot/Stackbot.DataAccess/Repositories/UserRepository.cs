@@ -132,5 +132,20 @@ namespace Stackbot.DataAccess.Repositories
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<ICollection<User>> GetUsersByHouseId(Guid ownerId, Guid houseId)
+        {
+            var userStorages = await _context.UserStorage.Where(us => us.UserId == ownerId).Select(us => us.StorageId).ToListAsync();
+
+            var house = await _context.Storages.FirstOrDefaultAsync(s => s.Id == houseId && s.Type == StorageType.House && userStorages.Contains(houseId));
+
+            if (house == null)
+            {
+                throw new EntityNotFoundException(nameof(Storage), houseId);
+            }
+
+            var userIdsFromStorage = await _context.UserStorage.Where(us => us.StorageId == houseId).Select(us => us.UserId).ToListAsync();
+            return await _context.Users.Where(u => userIdsFromStorage.Contains(u.Id)).ToListAsync();
+        }
     }
 }
