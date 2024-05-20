@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Stackbot.DataAccess.Exceptions;
 using StackBot.Business.Interfaces;
+using StackBot.Domain.Enums;
 
 namespace StackBot.Business.Storages.Commands
 {
-    public record DeleteStorage(string storageName, Guid? parentStorageId) : IRequest<Unit>;
+    public record DeleteStorage(Guid userId, string storageName, Guid? parentStorageId) : IRequest<Unit>;
 
     public class DeleteStorageHandler : IRequestHandler<DeleteStorage, Unit>
     {
@@ -17,24 +18,41 @@ namespace StackBot.Business.Storages.Commands
 
         public async Task<Unit> Handle(DeleteStorage request, CancellationToken cancellationToken)
         {
-            /*if (request.parentStorageId == null)
-            {
-                var storagesCount = await _storageRepository.CountStoragesWithTheSameName(request.storageName);
-
-                if(storagesCount > 1)
-                {
-                    throw new ApplicationException("Exception Error 409: CONFLICT!");
-                }
-            }*/
-
-            var storageToRemove = await _storageRepository.GetStorageByName(request.storageName);
+            var storageToRemove = await _storageRepository.GetStorageByName(request.userId, request.storageName);
 
             if (storageToRemove == null)
             {
                 throw new StorageNotFoundException(request.storageName);
             }
 
-            await _storageRepository.DeleteStorageById(storageToRemove.Id);
+            if (storageToRemove.Type == StorageType.House)
+            {
+                var subStorages = await _storageRepository.GetRoomsByHouseId(request.userId, storageToRemove.Id);
+
+                foreach (var subStorage in subStorages)
+                {
+                    var subSubStorages = await _storageRepository.GetSubStoragesByRoomId(request.userId, subStorage.Id);
+
+                    foreach (var subSubStorage in subSubStorages)
+                    {
+                        await _storageRepository.DeleteStorageById(request.userId, subSubStorage.Id);
+                    }
+
+                    await _storageRepository.DeleteStorageById(request.userId, subStorage.Id);
+                }
+            }
+
+            if (storageToRemove.Type == StorageType.Room)
+            {
+                var subStorages = await _storageRepository.GetSubStoragesByRoomId(request.userId, storageToRemove.Id);
+
+                foreach (var subStorage in subStorages)
+                {
+                    await _storageRepository.DeleteStorageById(request.userId, subStorage.Id);
+                }
+            }
+
+            await _storageRepository.DeleteStorageById(request.userId, storageToRemove.Id);
 
             return Unit.Value;
         }

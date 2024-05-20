@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Stackbot.DataAccess.Exceptions;
+using Stackbot.Domain.Entities;
 using StackBot.Business.Interfaces;
 using StackBot.Domain.Entities;
+using StackBot.Domain.Enums;
 
 namespace Stackbot.DataAccess.Repositories
 {
@@ -31,7 +33,7 @@ namespace Stackbot.DataAccess.Repositories
 
             if (!result.Succeeded)
             {
-                throw new Exception("User creation failed!");
+                throw new ApplicationException("User creation failed!");
             }
             return user;
         }
@@ -52,6 +54,17 @@ namespace Stackbot.DataAccess.Repositories
             }
 
             return identityUser;
+        }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new UserNotFoundException(email);
+            }
+
+            return user;
         }
 
         public async Task<User> GetUserById(Guid userId)
@@ -90,6 +103,49 @@ namespace Stackbot.DataAccess.Repositories
             {
                 throw new ApplicationException("User deletion failed!");
             }
+        }
+
+        public async Task AddUserToStorage(Guid ownerId, Guid houseId, Guid userId)
+        {
+            var userStorages = await _context.UserStorage.Where(us => us.UserId == ownerId).Select(us => us.StorageId).ToListAsync();
+
+            var house = await _context.Storages.FirstOrDefaultAsync(s => s.Id == houseId && s.Type == StorageType.House && userStorages.Contains(houseId));
+
+            if (house == null)
+            {
+                throw new EntityNotFoundException(nameof(Storage), houseId);
+            }
+
+            var userStorage = await _context.UserStorage.FirstOrDefaultAsync(us => us.Id == userId && us.StorageId == houseId);
+            if (userStorage != null)
+            {
+                throw new UserAlreadyAssignedToStorageException();
+            }
+
+            var newUserStorage = new UserStorage
+            {
+                UserId = userId,
+                StorageId = houseId,
+            };
+            
+            _context.UserStorage.Add(newUserStorage);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<ICollection<User>> GetUsersByHouseId(Guid ownerId, Guid houseId)
+        {
+            var userStorages = await _context.UserStorage.Where(us => us.UserId == ownerId).Select(us => us.StorageId).ToListAsync();
+
+            var house = await _context.Storages.FirstOrDefaultAsync(s => s.Id == houseId && s.Type == StorageType.House && userStorages.Contains(houseId));
+
+            if (house == null)
+            {
+                throw new EntityNotFoundException(nameof(Storage), houseId);
+            }
+
+            var userIdsFromStorage = await _context.UserStorage.Where(us => us.StorageId == houseId).Select(us => us.UserId).ToListAsync();
+            return await _context.Users.Where(u => userIdsFromStorage.Contains(u.Id)).ToListAsync();
         }
     }
 }

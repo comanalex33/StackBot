@@ -1,4 +1,6 @@
-﻿namespace StackBot.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace StackBot.Domain.Entities
 {
     public class Item
     {

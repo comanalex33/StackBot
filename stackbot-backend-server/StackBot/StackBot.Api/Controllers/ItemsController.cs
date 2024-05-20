@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StackBot.Api.Extensions;
 using StackBot.Business.Dtos.ItemDtos;
 using StackBot.Business.Items.Commands;
 using StackBot.Business.Items.Queries;
@@ -23,16 +24,20 @@ namespace StackBot.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateItem(CreateItemDto createItemDto)
         {
-            var command = new CreateItem(createItemDto);
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new CreateItem(userId, createItemDto);
             var response = await _mediator.Send(command);
 
             return Ok(response);
         }
 
         [HttpDelete("{itemName}")]
-        public async Task<IActionResult> Deleteitem(string itemName)
+        public async Task<IActionResult> DeleteItem(string itemName)
         {
-            var command = new DeleteItem(itemName);
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new DeleteItem(userId, itemName);
             await _mediator.Send(command);
 
             return NoContent();
@@ -41,16 +46,9 @@ namespace StackBot.Api.Controllers
         [HttpGet("{itemName}")]
         public async Task<IActionResult> GetItemsContainingName(string itemName)
         {
-            var command = new GetItemsContainingName(itemName);
-            var response = await _mediator.Send(command);
+            var userId = HttpContext.GetUserIdClaimValue();
 
-            return Ok(response);
-        }
-
-        [HttpGet("items/{storageName}")]
-        public async Task<IActionResult> GetItemsByStorageName(string storageName)
-        {
-            var command = new GetItemsByStorageName(storageName);
+            var command = new GetItemsContainingName(userId, itemName);
             var response = await _mediator.Send(command);
 
             return Ok(response);
@@ -59,7 +57,9 @@ namespace StackBot.Api.Controllers
         [HttpPut("{name}")]
         public async Task<IActionResult> UpdateItem(string name, UpdateItemDto updateItemDto)
         {
-            var command = new UpdateItem(name, updateItemDto);
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new UpdateItem(userId, name, updateItemDto);
             var response = await _mediator.Send(command);
 
             return Ok(response);

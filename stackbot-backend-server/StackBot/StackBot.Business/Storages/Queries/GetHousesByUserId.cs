@@ -22,11 +22,6 @@ namespace StackBot.Business.Storages.Queries
         {
             var storages = await _storageRepository.GetHousesByUserId(request.Id);
 
-            if (storages == null || storages.Count == 0)
-            {
-                throw new ApplicationException("There were no storages found!");
-            }
-
             return _mapper.Map<ICollection<StorageResponseDto>>(storages);
         }
     }

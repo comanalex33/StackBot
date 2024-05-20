@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StackBot.Api.Extensions;
 using StackBot.Business.Dtos.StorageDtos;
+using StackBot.Business.Items.Queries;
 using StackBot.Business.Storages.Commands;
 using StackBot.Business.Storages.Queries;
 
@@ -27,7 +28,7 @@ namespace StackBot.Api.Controllers
         {
             var userId = HttpContext.GetUserIdClaimValue();
 
-            var command = new CreateStorage(createStorageDto, userId);
+            var command = new CreateStorage(userId, createStorageDto);
             var response = await _mediator.Send(command);
 
             return Ok(response);
@@ -36,13 +37,37 @@ namespace StackBot.Api.Controllers
         [HttpDelete("{name}")]
         public async Task<IActionResult> DeleteStorage(string name, Guid? parentStorageId)
         {
-            var command = new DeleteStorage(name, parentStorageId);
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new DeleteStorage(userId, name, parentStorageId);
             await _mediator.Send(command);
 
             return NoContent();
         }
 
-        [HttpGet("/houses")]
+        [HttpGet("houses/{houseId}/users")]
+        public async Task<IActionResult> GetUsersByHouseId(Guid houseId)
+        {
+            var ownerId = HttpContext.GetUserIdClaimValue();
+
+            var command = new GetUsersByHouseId(ownerId, houseId);
+            var response = await _mediator.Send(command);
+
+            return Ok(response);
+        }
+
+        [HttpPost("houses/{houseId}/users/{email}")]
+        public async Task<IActionResult> AddUserToHouse(Guid houseId, string email)
+        {
+            var ownerId = HttpContext.GetUserIdClaimValue();
+
+            var command = new AddUserToHouse(ownerId, houseId, email);
+            await _mediator.Send(command);
+
+            return NoContent();
+        }
+
+        [HttpGet("houses")]
         public async Task<IActionResult> GetHousesByUserId()
         {
             var userId = HttpContext.GetUserIdClaimValue();
@@ -53,19 +78,34 @@ namespace StackBot.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("/rooms/{houseId}")]
+        [HttpGet("{houseId}/rooms")]
         public async Task<IActionResult> GetRoomsByHouseId(Guid houseId)
         {
-            var command = new GetRoomsByHouseId(houseId);
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new GetRoomsByHouseId(userId,houseId);
             var response = await _mediator.Send(command);
 
             return Ok(response);
         }
 
-        [HttpGet("/substorages/{roomId}")]
+        [HttpGet("{roomId}/substorages")]
         public async Task<IActionResult> GetSubStoragesByRoomId(Guid roomId)
         {
-            var command = new GetSubStoragesByRoomId(roomId);
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new GetSubStoragesByRoomId(userId, roomId);
+            var response = await _mediator.Send(command);
+
+            return Ok(response);
+        }
+
+        [HttpGet("{storageName}/items")]
+        public async Task<IActionResult> GetItemsByStorageName(string storageName)
+        {
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new GetItemsByStorageName(userId, storageName);
             var response = await _mediator.Send(command);
 
             return Ok(response);
@@ -74,7 +114,9 @@ namespace StackBot.Api.Controllers
         [HttpPut("{name}")]
         public async Task<IActionResult> UpdateStorage(String name, UpdateStorageDto updateStorageDto)
         {
-            var command = new UpdateStorage(name, updateStorageDto);
+            var userId = HttpContext.GetUserIdClaimValue();
+
+            var command = new UpdateStorage(userId, name, updateStorageDto);
             var response = await _mediator.Send(command);
 
             return Ok(response);

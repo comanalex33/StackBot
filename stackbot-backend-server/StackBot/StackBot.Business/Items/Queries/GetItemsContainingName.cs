@@ -5,7 +5,7 @@ using StackBot.Business.Interfaces;
 
 namespace StackBot.Business.Items.Queries
 {
-    public record GetItemsContainingName(string itemName) : IRequest<ICollection<ItemResponseDto>>;
+    public record GetItemsContainingName(Guid userId, string itemName) : IRequest<ICollection<ItemResponseDto>>;
 
     public class GetItemsByNameHandler : IRequestHandler<GetItemsContainingName, ICollection<ItemResponseDto>>
     {
@@ -20,7 +20,7 @@ namespace StackBot.Business.Items.Queries
 
         public async Task<ICollection<ItemResponseDto>> Handle(GetItemsContainingName request, CancellationToken cancellationToken)
         {
-            var items = await _itemRepository.GetAllItemsContainingName(request.itemName);
+            var items = await _itemRepository.GetAllItemsContainingName(request.userId, request.itemName);
 
             return _mapper.Map<ICollection<ItemResponseDto>>(items);
         }

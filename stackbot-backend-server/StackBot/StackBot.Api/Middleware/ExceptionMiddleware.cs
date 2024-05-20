@@ -22,7 +22,7 @@ namespace StackBot.Api.Middleware
             {
                 await _next(context);
             }
-            catch (Exception ex) when (ex is EntityNotFoundException || ex is StorageNotFoundException)
+            catch (Exception ex) when (ex is EntityNotFoundException || ex is StorageNotFoundException || ex is UserNotFoundException)
             {
                 await HandleCustomExceptionAsync(context, ex, HttpStatusCode.NotFound);
             }
@@ -30,7 +30,7 @@ namespace StackBot.Api.Middleware
             {
                 await HandleCustomExceptionAsync(context, ex, HttpStatusCode.Unauthorized);
             }
-            catch (Exception ex) when (ex is EntityAlreadyExistsException || ex is UserAlreadyExistsException)
+            catch (Exception ex) when (ex is EntityAlreadyExistsException || ex is UserAlreadyExistsException || ex is UserAlreadyAssignedToStorageException)
             {
                 await HandleCustomExceptionAsync(context, ex, HttpStatusCode.Conflict);
             }

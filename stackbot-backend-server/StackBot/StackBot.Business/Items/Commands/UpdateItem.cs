@@ -5,7 +5,7 @@ using StackBot.Business.Interfaces;
 
 namespace StackBot.Business.Items.Commands
 {
-    public record UpdateItem(string name, UpdateItemDto updateItemRequestDto) : IRequest<ItemResponseDto>;
+    public record UpdateItem(Guid userId, string name, UpdateItemDto updateItemRequestDto) : IRequest<ItemResponseDto>;
 
     public class UpdateItemHandler : IRequestHandler<UpdateItem, ItemResponseDto>
     {
@@ -20,7 +20,7 @@ namespace StackBot.Business.Items.Commands
 
         public async Task<ItemResponseDto> Handle(UpdateItem request, CancellationToken cancellationToken)
         {
-            var itemToUpdate = await _itemRepository.GetItemByName(request.name);
+            var itemToUpdate = await _itemRepository.GetItemByName(request.userId, request.name);
 
             itemToUpdate.Name = request.updateItemRequestDto.Name;
             itemToUpdate.Description = request.updateItemRequestDto.Description;

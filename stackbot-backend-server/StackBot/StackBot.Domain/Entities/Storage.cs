@@ -1,5 +1,6 @@
 ﻿using Stackbot.Domain.Entities;
 using StackBot.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace StackBot.Domain.Entities
 {

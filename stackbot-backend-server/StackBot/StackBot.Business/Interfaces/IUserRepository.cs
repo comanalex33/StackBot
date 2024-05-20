@@ -6,9 +6,11 @@ namespace StackBot.Business.Interfaces
     {
         Task<User> RegisterUser(User user, string password);
         Task<User> LoginUser(string email, string password);
+        Task<User> GetUserByEmail(string email);
         Task<User> GetUserById(Guid userId);
-        //Task<ICollection<User>> GetAllUsers();
         Task<User> UpdateUser(User user);
         Task DeleteUser(Guid userId);
+        Task AddUserToStorage(Guid ownerId, Guid houseId, Guid userId);
+        Task<ICollection<User>> GetUsersByHouseId(Guid ownerId, Guid houseId);
     }
 }

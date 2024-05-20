@@ -18,9 +18,17 @@ namespace Stackbot.DataAccess.Repositories
 
         public async Task<Storage> CreateStorage(Storage storage, Guid userId)
         {
-            if (_context.Storages.Any(s => s.Name == storage.Name))
+            var userStorages = await _context.UserStorage.Where(us => us.UserId == userId).ToListAsync();
+
+            foreach (var existingUserStorage in userStorages)
             {
-                throw new EntityAlreadyExistsException(nameof(Storage), storage.Name);
+                var getStorage = await _context.Storages
+                                               .FirstOrDefaultAsync(s => s.Id == existingUserStorage.StorageId);
+
+                if (getStorage != null && getStorage.Name == storage.Name)
+                {
+                    throw new EntityAlreadyExistsException(nameof(Storage), storage.Name);
+                }
             }
 
             _context.Storages.Add(storage);
@@ -38,44 +46,50 @@ namespace Stackbot.DataAccess.Repositories
             return storage;
         }
 
-        public async Task DeleteStorageById(Guid storageId)
+        public async Task DeleteStorageById(Guid userId, Guid storageId)
         {
             var storageForDelete = await _context.Storages.FirstOrDefaultAsync(s => s.Id == storageId);
 
             if (storageForDelete == null)
             {
-                throw new ApplicationException("Storage not found!");
+                throw new EntityNotFoundException(nameof(Storage), storageId);
             }
 
+            var userStorages = await _context.UserStorage
+                                             .Where(us => us.UserId == userId && us.StorageId == storageId)
+                                             .ToListAsync();
+
+            _context.UserStorage.RemoveRange(userStorages);
             _context.Storages.Remove(storageForDelete);
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ICollection<Storage>> GetAllStorages()
+        public async Task<Storage> GetStorageByName(Guid userId, string storageName)
         {
-            return await _context.Storages.ToListAsync();
-        }
+            var userStorages = await _context.UserStorage.Where(us => us.UserId == userId).ToListAsync();
 
-        public async Task<Storage> GetStorageByName(string storageName)
-        {
-            var getStorage = await _context.Storages.FirstOrDefaultAsync(s => s.Name == storageName);
+            foreach(var userStorage in userStorages)
+            {
+                var getStorage = await _context.Storages.FirstOrDefaultAsync(s => s.Id == userStorage.StorageId);
 
-            return getStorage;
+                if(getStorage.Name == storageName)
+                {
+                    return getStorage;
+                }
+            }
+           
+            return null;
         }
 
         public async Task<Storage> UpdateStorage(Storage storage)
         {
-            if (_context.Storages.Any(s => s.Name == storage.Name))
-            {
-                throw new EntityAlreadyExistsException(nameof(Storage), storage.Name);
-            }
 
             var storageForUpdate = await _context.Storages.FirstOrDefaultAsync(s => s.Id == storage.Id);
 
             if (storageForUpdate == null)
             {
-                throw new ApplicationException("Storage not found!");
+                throw new EntityNotFoundException(nameof(Storage), storage.Name);
             }
 
             _context.Storages.Update(storage);
@@ -85,13 +99,6 @@ namespace Stackbot.DataAccess.Repositories
             return storage;
         }
 
-        public async Task<int> CountStoragesWithTheSameName(string storageName)
-        {
-            var getStorages = await _context.Storages.Where(s => s.Name == storageName).ToListAsync();
-            
-            return getStorages.Count;
-        }
-
         public async Task<ICollection<Storage>> GetHousesByUserId(Guid userId)
         {
             var getStorages = await _context.Storages.Where(s => s.UserStorages.Any(u => u.UserId == userId) && s.Type == StorageType.House).ToListAsync();
@@ -99,19 +106,36 @@ namespace Stackbot.DataAccess.Repositories
             return getStorages;
         }
 
-        public async Task<ICollection<Storage>> GetRoomsByHouseId(Guid parentId)
+        public async Task<ICollection<Storage>> GetRoomsByHouseId(Guid userId, Guid parentId)
         {
-            var getStorages = await _context.Storages.Where(s => s.ParentStorage.Id == parentId && s.Type == StorageType.Room).ToListAsync();
+            var userStorages = await _context.UserStorage.Where(us => us.UserId == userId).ToListAsync();
 
-            return getStorages;
+            var storages = new List<Storage>();
+
+            foreach(var userStorage in userStorages)
+            {
+                var getStorage = await _context.Storages.FirstOrDefaultAsync(s => s.Id == userStorage.StorageId);
+
+                storages.Add(getStorage);
+            }
+
+            return storages.Where(s => s.ParentStorageId == parentId && s.Type == StorageType.Room).ToList();
         }
 
-        public async Task<ICollection<Storage>> GetSubStoragesByRoomId(Guid parentId)
+        public async Task<ICollection<Storage>> GetSubStoragesByRoomId(Guid userId, Guid parentId)
         {
-            var getStorages = await _context.Storages.Where(s => s.ParentStorage.Id == parentId && (s.Type == StorageType.Deposit || s.Type == StorageType.Fridge)).ToListAsync();
+            var userStorages = await _context.UserStorage.Where(us => us.UserId == userId).ToListAsync();
 
-            return getStorages;
+            var storages = new List<Storage>();
+
+            foreach (var userStorage in userStorages)
+            {
+                var getStorage = await _context.Storages.FirstOrDefaultAsync(s => s.Id == userStorage.StorageId);
+
+                storages.Add(getStorage);
+            }
+
+            return storages.Where(s => s.ParentStorageId == parentId && (s.Type == StorageType.Deposit || s.Type == StorageType.Fridge)).ToList();
         }
-
     }
 }
