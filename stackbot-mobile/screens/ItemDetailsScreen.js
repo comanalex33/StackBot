@@ -9,7 +9,7 @@ import StorageModel from '../models/StorageModel';
 import ModifyItemDialog from '../components/dialogs/ModifyItemDialog';
 import { formatDate } from '../Helper';
 import DeleteItemDialog from '../components/dialogs/DeleteItemDialog';
-import { deleteItem } from '../services/ApiService/itemService';
+import { deleteItem } from '../services/BackendApiService/itemService';
 import { useUpdate } from '../services/UpdateService/UpdateContext';
 import UpdateTypes from '../services/UpdateService/UpdateTypes';
 

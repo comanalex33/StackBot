@@ -5,7 +5,7 @@ import StorageCard from '../components/cards/StorageCard';
 import '../assets/fridge.png'
 import '../assets/boxes.png'
 import StorageModel from '../models/StorageModel';
-import { getSubstorages } from '../services/ApiService/storageService';
+import { getSubstorages } from '../services/BackendApiService/storageService';
 import { useUpdate } from '../services/UpdateService/UpdateContext';
 import UpdateTypes from '../services/UpdateService/UpdateTypes';
 

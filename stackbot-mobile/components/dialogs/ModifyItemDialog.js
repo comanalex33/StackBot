@@ -8,7 +8,7 @@ import DateButton from '../buttons/DateButton';
 import { formatDate, formatDateForApiRequest } from '../../Helper';
 import ItemModel from '../../models/ItemModel';
 import { StorageTypes } from '../../models/StorageTypes';
-import { updateItem } from '../../services/ApiService/itemService';
+import { updateItem } from '../../services/BackendApiService/itemService';
 import { useUpdate } from '../../services/UpdateService/UpdateContext';
 import UpdateTypes from '../../services/UpdateService/UpdateTypes';
 

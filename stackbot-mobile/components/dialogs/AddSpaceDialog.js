@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import StorageModel from '../../models/StorageModel';
 import { StorageTypeIndexFromName, StorageTypes } from '../../models/StorageTypes';
 import { useUpdate } from '../../services/UpdateService/UpdateContext';
-import { addStorage } from '../../services/ApiService/storageService';
+import { addStorage } from '../../services/BackendApiService/storageService';
 import UpdateTypes from '../../services/UpdateService/UpdateTypes';
 
 // Setup validation schema using Yup

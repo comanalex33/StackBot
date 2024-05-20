@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../components/buttons/Button';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { register } from '../services/ApiService/userService';
+import { register } from '../services/BackendApiService/userService';
 
 const reviewSchema = yup.object({
     email: yup.string()

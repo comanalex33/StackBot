@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import StorageModel from '../../models/StorageModel';
 import { StorageTypeIndexFromName, StorageTypes } from '../../models/StorageTypes';
-import { addStorage } from '../../services/ApiService/storageService';
+import { addStorage } from '../../services/BackendApiService/storageService';
 import { useUpdate } from '../../services/UpdateService/UpdateContext';
 import UpdateTypes from '../../services/UpdateService/UpdateTypes';
 

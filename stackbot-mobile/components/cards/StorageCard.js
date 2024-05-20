@@ -7,7 +7,7 @@ import { StorageTypes } from '../../models/StorageTypes';
 import ModifyStorageDialog from '../dialogs/ModifyStorageDialog';
 import { useUpdate } from '../../services/UpdateService/UpdateContext';
 import UpdateTypes from '../../services/UpdateService/UpdateTypes';
-import { deleteStorage } from '../../services/ApiService/storageService';
+import { deleteStorage } from '../../services/BackendApiService/storageService';
 
 const StorageCard = ({ storage, icon, onPress }) => {
 

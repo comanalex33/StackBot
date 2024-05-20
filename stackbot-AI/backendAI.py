@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import urlparse, parse_qs
 import ssl
 import spacy
 import re
@@ -8,22 +9,45 @@ import requests
 backend_url = "http://13.51.249.39/"
 
 class RequestHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        # Set response status code
-        self.send_response(200)
-        # Set response headers
+    def _process_response(self, errorCode, message):
+        self.send_response(errorCode)
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
-        # Get the request body
-        content_length = int(self.headers['Content-Length'])
+        
+        errorText = message
+        body = errorText.encode('utf-8')
+        self.wfile.write(body)
+    
+    def _process_body(self, header):
+        content_length = int(header)
         post_data = self.rfile.read(content_length)
         data = json.loads(post_data.decode('utf-8'))
-        text = data.get('text')
-        jwt_token = data.get('token')
-        bodyText = process_message(text,jwt_token)
-        body = bodyText.encode('utf-8')
-        # Echo the received text back in the response
-        self.wfile.write(body)
+        
+        # Check 'token' parameter existance
+        if 'token' in data:
+            token = str(data.get('token'))
+        else:
+            self._process_response(401, "Sorry, process is unauthorized")
+            return
+        
+        # Check 'text' parameter existance
+        if 'text' in data:
+            text = str(data.get('text'))
+        else:
+            self._process_response(401, "Sorry, text is not specified")
+            return
+        
+        return token, text
+    
+    def do_POST(self):
+        path = urlparse(self.path).path
+        
+        if path == "/process":
+            jwt_token, text = self._process_body(header=self.headers['Content-Length'])
+            bodyText = process_message(text,jwt_token)
+            self._process_response(200, bodyText)
+        else:
+            self._process_response(404, "This path does not exist, only /process can be used")
 
 def process_message(message,jwt_token):
     # Load the English NLP model from spaCy
@@ -188,15 +212,8 @@ def case4(store_name,jwt_token):
 
 def run_server():
     # Set up server settings
-    server_address = ('0.0.0.0', 8443)  # Customize port and host if needed
+    server_address = ('0.0.0.0', 8000)  # Customize port and host if needed
     httpd = HTTPServer(server_address, RequestHandler)
-
-    # Load SSL certificate and key
-    # certfile = './cert.pem'  # Update with your certificate file path
-    # keyfile = './key.pem'     # Update with your private key file path
-
-    # Start the server with SSL/TLS support
-    # httpd.socket = ssl.wrap_socket(httpd.socket, certfile=certfile, keyfile=keyfile, server_side=True)
 
     print('Starting server...')
     try:
