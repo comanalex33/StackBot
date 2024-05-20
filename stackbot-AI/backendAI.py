@@ -87,7 +87,7 @@ def case1(store_name,jwt_token):
         'Authorization': 'Bearer ' + jwt_token
     }
     try:
-        response = requests.get(backend_url+"api/items/items/"+store_name, headers=headers)
+        response = requests.get(backend_url+"api/storages/"+store_name+"/items", headers=headers)
         if response.status_code == 200:
             print("GET request successful!")
             print("Response:")
@@ -167,7 +167,7 @@ def case4(store_name,jwt_token):
         'Authorization': 'Bearer ' + jwt_token
     }
     try:
-        response = requests.get(backend_url+"api/items/items/"+store_name, headers=headers)
+        response = requests.get(backend_url+"api/storages/"+store_name+"/items", headers=headers)
         if response.status_code == 200:
             print("GET request successful!")
             print("Response:")
