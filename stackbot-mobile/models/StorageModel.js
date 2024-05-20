@@ -1,12 +1,13 @@
 import BaseModel from "./BaseModel";
+import { StorageTypeFromIndex } from "./StorageTypes";
 
 class StorageModel extends BaseModel {
-    constructor({ id = null, name, type, description, storageId = null } = {}) {
+    constructor({ id = null, name, type, description, parentStorageId = null } = {}) {
         super(id); // Call the constructor of the BaseModel
         this.name = name;
         this.type = type;
         this.description = description;
-        this.storageId = storageId;
+        this.parentStorageId = parentStorageId;
     }
 
     // Getter methods
@@ -18,12 +19,16 @@ class StorageModel extends BaseModel {
         return this.type;
     }
 
+    getTypeText() {
+        return StorageTypeFromIndex[this.type]
+    }
+
     getDescription() {
         return this.description;
     }
 
-    getStorageId() {
-        return this.storageId;
+    getParentStorageId() {
+        return this.parentStorageId;
     }
 
     // Setter methods
@@ -39,8 +44,8 @@ class StorageModel extends BaseModel {
         this.description = description;
     }
 
-    setStorageId(storageId) {
-        this.storageId = storageId;
+    setParentStorageId(parentStorageId) {
+        this.parentStorageId = parentStorageId;
     }
 }
 

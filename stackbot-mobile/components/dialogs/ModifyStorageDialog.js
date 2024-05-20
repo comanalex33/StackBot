@@ -3,8 +3,9 @@ import { Text, StyleSheet, TextInput, View, TouchableOpacity } from 'react-nativ
 import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import StorageTypes from '../../models/StorageTypes';
+import { StorageTypes } from '../../models/StorageTypes';
 import StorageModel from '../../models/StorageModel';
+import { updateStorage } from '../../services/ApiService/storageService';
 
 // Setup validation schema using Yup
 const validationSchema = Yup.object({
@@ -14,38 +15,52 @@ const validationSchema = Yup.object({
         .required('Description is required')
 });
 
-const ModifyStorageDialog = ({ storage, visible, onClose }) => {
+const ModifyStorageDialog = ({ storage, visible, onClose, updateList }) => {
 
     const storageModel = new StorageModel(storage)
 
     const handleUpdateStorage = (name, description) => {
-        const updatedStorage = houseModel
+        const updatedStorage = storageModel
         updatedStorage.setName(name)
         updatedStorage.setDescription(description)
 
-        // TODO - Handle Storage update
-        if (!updatedStorage.isEqual(house)) {
-            console.log("Something changed")
+        if (!updatedStorage.isEqual(storage)) {
             console.log(updatedStorage)
 
-            if (storageModel.getType() === StorageTypes.House) {
-                // House
-            } else if (storageModel.getType() === StorageTypes.Room) {
-                // Room
-            } else if (storageModel.getType() === StorageTypes.Deposit) {
-                // Deposit
-            } else {
-                // Fridge
-            }
+            updateStorage(storage.name, name, description)
+                .then(response => {
+                    if (response.status !== 200) {
+                        alert(`Something went wrong ${response.status}`)
+                        return
+                    }
+
+                    updateList()
+                    onClose()
+                })
+                .catch(error => {
+                    const response = error.response
+
+                    console.log(response.status)
+
+                    if (!response) {
+                        alert("Something went wrong!")
+                    }
+
+                    if (response.status === 401) {
+                        alert(response.data.message)
+                    } else {
+                        alert("Something went wrong!")
+                    }
+                })
         }
     }
 
     const getStorageTypeName = () => {
-        if (storageModel.getType() === StorageTypes.House) {
+        if (storageModel.getTypeText() === StorageTypes.House) {
             return "House"
-        } else if (storageModel.getType() === StorageTypes.Room) {
+        } else if (storageModel.getTypeText() === StorageTypes.Room) {
             return "Room"
-        } else if (storageModel.getType() === StorageTypes.Deposit) {
+        } else if (storageModel.getTypeText() === StorageTypes.Deposit) {
             return "Deposit"
         } else {
             return "Fridge"
@@ -60,7 +75,7 @@ const ModifyStorageDialog = ({ storage, visible, onClose }) => {
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
                     handleUpdateStorage(values.name, values.description)
-                    onClose(); // Close the dialog on successful submission
+                    // onClose(); // Close the dialog on successful submission
                 }}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (

@@ -52,7 +52,7 @@ const RoomsHeader = ({ route }) => {
             </View>
 
             {/* Add Room Dialog */}
-            <AddRoomDialog visible={addRoomDialogVisible} onClose={toggleAddRoomDialog}/>
+            <AddRoomDialog visible={addRoomDialogVisible} onClose={toggleAddRoomDialog} house={houseModel}/>
 
             {/* See Members Dialog */}
             <MembersDialog visible={membersDialogVisible} onClose={toggleMembersDialog}/>

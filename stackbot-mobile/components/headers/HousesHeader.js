@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ConfirmLogoutDialog from '../dialogs/ConfirmLogoutDialog';
+import { unsetAuthToken } from '../../services/ApiService/api';
+import { useUpdate } from '../../services/UpdateService/UpdateContext';
+import UpdateTypes from '../../services/UpdateService/UpdateTypes';
 
 const HousesHeader = () => {
+
+    const { addUpdate } = useUpdate();
 
     const [logoutDialogVisible, setLogoutDialogVisible] = useState(false)
 
@@ -14,7 +19,9 @@ const HousesHeader = () => {
     const handleLogout = () => {
         console.log("Logout User")
 
-        // TODO - Implement user log out
+        unsetAuthToken()
+        toggleLougoutDialogVisible()
+        addUpdate(UpdateTypes.TRIGGER_LOGOUT)
     }
 
     return (

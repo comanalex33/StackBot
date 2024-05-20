@@ -3,8 +3,8 @@ import { Text, StyleSheet, TextInput, View, TouchableOpacity } from 'react-nativ
 import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import StorageModel from '../../models/StorageModel';
-import StorageTypes from '../../models/StorageTypes';
+import { StorageTypeIndexFromName } from '../../models/StorageTypes';
+import { addStorage } from '../../services/ApiService/storageService';
 
 // Setup validation schema using Yup
 const validationSchema = Yup.object({
@@ -14,17 +14,31 @@ const validationSchema = Yup.object({
         .required('Description is required'),
 });
 
-const AddHouseDialog = ({ visible, onClose }) => {
+const AddHouseDialog = ({ visible, onClose, updateHousesList }) => {
 
     const handleCreateHouse = (name, description) => {
-        const house = new StorageModel({
-            name: name,
-            description: description,
-            type: StorageTypes.House
-        })
+        addStorage(name, StorageTypeIndexFromName.house, description, null)
+            .then(response => {
+                if (response.status !== 200) {
+                    alert("Something went wrong")
+                    return
+                }
 
-        // TODO - Handle House creation
-        console.log(house)
+                updateHousesList()
+            })
+            .catch(error => {
+                const response = error.response
+
+                if (!response) {
+                    alert("Something went wrong!")
+                }
+
+                if (response.status === 401) {
+                    alert(response.data.message)
+                } else {
+                    alert("Something went wrong!")
+                }
+            })
     }
 
     return (

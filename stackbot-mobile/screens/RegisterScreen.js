@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../components/buttons/Button';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { register } from '../services/ApiService/userService';
 
 const reviewSchema = yup.object({
     email: yup.string()
@@ -27,10 +28,27 @@ export default function RegisterScreen({ navigation }) {
     const [showPassword, setShowPassword] = useState(false);
     const toggleShowPassword = () => setShowPassword(!showPassword);
 
-    const handleRegister = (values) => {
-        alert("User registered")
-        // TODO - Call Register function
-        navigation.goBack()
+    const handleRegister = (firstName, lastName, email, password) => {
+        register(firstName, lastName, email, password)
+            .then(response => {
+                if (response.status === 200) {
+                    alert("User registered")
+                    navigation.goBack()
+                }
+            })
+            .catch(error => {
+                const response = error.response
+
+                if (!response) {
+                    alert("Something went wrong!")
+                }
+
+                if (response.status === 401) {
+                    alert(response.data.message)
+                } else {
+                    alert("Something went wrong!")
+                }
+            })
     }
 
     return (
@@ -46,7 +64,7 @@ export default function RegisterScreen({ navigation }) {
                             validationSchema={reviewSchema}
                             onSubmit={(values, actions) => {
                                 actions.resetForm();
-                                handleRegister(values);
+                                handleRegister(values.firstName, values.lastName, values.email, values.password);
                             }}
                             onReset={() => { }}
                         >

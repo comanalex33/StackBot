@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; // Importing icons from Expo Icons
 import { SvgXml } from 'react-native-svg';
@@ -6,16 +6,47 @@ import HouseCard from '../components/cards/HouseCard';
 import FloatingAddButton from '../components/buttons/FloatingAddButton';
 import AddHouseDialog from '../components/dialogs/AddHouseDialog';
 import StorageModel from '../models/StorageModel';
+import { getHouses } from '../services/ApiService/storageService';
+import { useUpdate } from '../services/UpdateService/UpdateContext';
+import UpdateTypes from '../services/UpdateService/UpdateTypes';
 
-const houses = [
-    { id: '1', name: "Alex's House", type: 'house', description: 'Description for House 1', storageId: null },
-    { id: '2', name: "David's House", type: 'house', description: 'Description for House 2', storageId: null },
-    // Add more data as needed
-];
+// House entry example
+//  { id: '1', name: "Alex's House", type: 0, description: 'Description for House 1', parentStorageId: null } 
 
 const HousesScreen = ({ navigation }) => {
 
+    const { updates, cleanUpdates } = useUpdate();
+
     const [dialogVisible, setDialogVisible] = useState(false);
+
+    const [houses, setHouses] = useState([])
+
+    // Get houses when screen opens
+    useEffect(() => {
+        getHouses()
+            .then(response => {
+                setHouses(response.data)
+            })
+            .catch(error => console.log(error))
+    }, [])
+
+    // Update context
+    useEffect(() => {
+        const latestUpdate = updates[updates.length - 1];
+        if (latestUpdate && latestUpdate === UpdateTypes.TRIGGER_LOGOUT) {
+            navigation.goBack()
+            cleanUpdates()
+        }
+    }, [updates])
+
+    // Update houses list
+    const updateHousesList = () => {
+        getHouses()
+            .then(response => {
+                setHouses(response.data)
+            })
+            .catch(error => console.log(error))
+    }
 
     const toggleDialog = () => {
         setDialogVisible(!dialogVisible);
@@ -28,7 +59,7 @@ const HousesScreen = ({ navigation }) => {
 
     const renderCard = ({ item }) => (
         <View style={styles.cardContainer}>
-            <HouseCard house={item} onPress={() => handleHouseClick(item)} />
+            <HouseCard house={item} onPress={() => handleHouseClick(item)} updateHousesList={updateHousesList} />
         </View>
     );
 
@@ -64,7 +95,7 @@ const HousesScreen = ({ navigation }) => {
             <FloatingAddButton onPress={toggleDialog} />
 
             {/* Add House Dialog */}
-            <AddHouseDialog visible={dialogVisible} onClose={toggleDialog} />
+            <AddHouseDialog visible={dialogVisible} onClose={toggleDialog} updateHousesList={updateHousesList} />
         </View>
     )
 }

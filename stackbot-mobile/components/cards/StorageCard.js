@@ -3,13 +3,17 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import DeleteStorageDialog from '../dialogs/DeleteStorageDialog';
 import StorageModel from '../../models/StorageModel';
-import StorageTypes from '../../models/StorageTypes';
+import { StorageTypes } from '../../models/StorageTypes';
 import ModifyStorageDialog from '../dialogs/ModifyStorageDialog';
+import { useUpdate } from '../../services/UpdateService/UpdateContext';
+import UpdateTypes from '../../services/UpdateService/UpdateTypes';
+import { deleteStorage } from '../../services/ApiService/storageService';
 
 const StorageCard = ({ storage, icon, onPress }) => {
 
     const storageModel = new StorageModel(storage)
 
+    const { addUpdate } = useUpdate();
     const [controlsOpen, setControlsOpen] = useState(false)
 
     const [modifyStorageDialogVisible, setModifyStorageDialogVisible] = useState(false)
@@ -20,23 +24,61 @@ const StorageCard = ({ storage, icon, onPress }) => {
     }
 
     const toggleModifyStorageDialogVisible = () => {
+        if (modifyStorageDialogVisible) {
+            toggleControls()
+        }
+
         setModifyStorageDialogVisible(!modifyStorageDialogVisible);
     }
 
     const toggleDeleteStorageDialogVisible = () => {
+        if (deleteStorageDialogVisible) {
+            toggleControls()
+        }
+
         setDeleteStorageDialogVisible(!deleteStorageDialogVisible)
     }
 
     const handleStorageDelete = () => {
-        if (storageModel.getType() === StorageTypes.Room) {
+        if (storageModel.getTypeText() === StorageTypes.Room) {
             console.log(`Room ${storageModel.getName()} is deleted`)
-        } else if (storageModel.getType() === StorageTypes.Fridge) {
+        } else if (storageModel.getTypeText() === StorageTypes.Fridge) {
             console.log(`Fridge ${storageModel.getName()} is deleted`)
-        } else if (storageModel.getType() === StorageTypes.Deposit) {
+        } else if (storageModel.getTypeText() === StorageTypes.Deposit) {
             console.log(`Deposit ${storageModel.getName()} is deleted`)
         }
 
-        // TODO - Handle Storage deletion
+        deleteStorage(storageModel.getName())
+            .then(response => {
+                if (response.status < 200 || response.status >= 300) {
+                    alert(`${response.status}: Something went wrong`)
+                    return
+                }
+
+                console.log(`Storage ${storageModel.getName()} is deleted`)
+                updateListTrigger()
+            })
+            .catch(error => {
+                const response = error.response
+
+                if (!response) {
+                    alert("Something went wrong!")
+                }
+
+                if ('message' in response.data) {
+                    alert(`${response.status}: ${response.data.message}`)
+                } else {
+                    alert(`${response.status}: Something went wrong!`)
+                }
+            })
+    }
+
+    const updateListTrigger = () => {
+        if (storageModel.getTypeText() === StorageTypes.Room) {
+            addUpdate(UpdateTypes.TRIGGER_ROOMS_UPDATE)
+        } else {
+            addUpdate(UpdateTypes.TRIGGER_SUBSTORAGES_UPDATE)
+        }
     }
 
     return (
@@ -74,7 +116,7 @@ const StorageCard = ({ storage, icon, onPress }) => {
             </TouchableOpacity>
 
             {/* Modify Storage Dialog */}
-            <ModifyStorageDialog storage={storageModel} visible={modifyStorageDialogVisible} onClose={toggleModifyStorageDialogVisible} />
+            <ModifyStorageDialog storage={storageModel} visible={modifyStorageDialogVisible} onClose={toggleModifyStorageDialogVisible} updateList={updateListTrigger} />
 
             {/* Delete Storage Dialog */}
             <DeleteStorageDialog storage={storageModel} visible={deleteStorageDialogVisible} onClose={toggleDeleteStorageDialogVisible} onSubmit={handleStorageDelete} />

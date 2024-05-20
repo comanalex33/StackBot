@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { Text, StyleSheet, TextInput, View, TouchableOpacity, Button } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
 import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import StorageModel from '../../models/StorageModel';
-import StorageTypes from '../../models/StorageTypes';
+import { StorageTypes } from '../../models/StorageTypes';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import DateButton from '../buttons/DateButton';
-import { formatDate } from '../../Helper';
-import ItemModel from '../../models/ItemModel';
+import { formatDate, formatDateForApiRequest } from '../../Helper';
+import { addItem } from '../../services/ApiService/itemService';
+import StorageModel from '../../models/StorageModel';
+import { useUpdate } from '../../services/UpdateService/UpdateContext';
+import UpdateTypes from '../../services/UpdateService/UpdateTypes';
 
 // Setup validation schema using Yup
 const validationSchema = Yup.object({
@@ -22,22 +24,38 @@ const validationSchema = Yup.object({
         .required('Date is required').nullable()
 });
 
-const AddItemDialog = ({ visible, onClose, spaceType, spaceId }) => {
+const AddItemDialog = ({ visible, onClose, spaceType, space }) => {
 
-    // const [date, setDate] = useState(new Date());
+    const spaceModel = new StorageModel(space)
+
+    const { addUpdate } = useUpdate();
 
     const handleCreateItem = (name, description, count, date) => {
-        const item = new ItemModel({
-            name: name,
-            description: description,
-            count: Number(count),
-            expirationDate: ( spaceType === StorageTypes.Fridge ) ? date : null,
-            warrantyDate: ( spaceType === StorageTypes.Deposit ) ? date : null,
-            storageId: spaceId
-        })
+        addItem(name, Number(count), description, spaceModel.getName(),
+            (spaceType === StorageTypes.Fridge) ? formatDateForApiRequest(date) : null,
+            (spaceType === StorageTypes.Deposit) ? formatDateForApiRequest(date) : null)
+            .then(response => {
+                if (response.status !== 200) {
+                    alert(`${response.status}: Something went wrong`)
+                    return
+                }
 
-        // TODO - Handle Item creation
-        console.log(item)
+                addUpdate(UpdateTypes.TRIGGER_ITEMS_UPDATE)
+            })
+            .catch(error => {
+                const response = error.response
+
+                if (!response) {
+                    alert("Something went wrong!")
+                }
+
+                if ('message' in response.data) {
+                    alert(`${response.status}: ${response.data.message}`)
+                } else {
+                    alert(`${response.status}: Something went wrong!`)
+                }
+            })
+
     }
 
     return (
@@ -90,7 +108,7 @@ const AddItemDialog = ({ visible, onClose, spaceType, spaceId }) => {
                             <View>
                                 <Text>{spaceType === StorageTypes.Fridge ? 'Expiration Date' : 'Warranty Date'}</Text>
                             </View>
-                            <DateButton text={ values.date === null ? "-" : formatDate(values.date)} onPress={() => {
+                            <DateButton text={values.date === null ? "-" : formatDate(values.date)} onPress={() => {
                                 DateTimePickerAndroid.open({
                                     value: values.date === null ? new Date() : values.date,
                                     onChange: (event, selectedDate) => {

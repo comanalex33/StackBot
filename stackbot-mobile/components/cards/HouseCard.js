@@ -5,8 +5,9 @@ import { AntDesign } from '@expo/vector-icons';
 import StorageModel from '../../models/StorageModel';
 import DeleteStorageDialog from '../dialogs/DeleteStorageDialog';
 import ModifyStorageDialog from '../dialogs/ModifyStorageDialog';
+import { deleteStorage } from '../../services/ApiService/storageService';
 
-const HouseCard = ({ house, onPress }) => {
+const HouseCard = ({ house, onPress, updateHousesList }) => {
 
   const houseModel = new StorageModel(house)
 
@@ -20,17 +21,45 @@ const HouseCard = ({ house, onPress }) => {
   }
 
   const toggleModifyHouseDialogVisible = () => {
+    if (modifyHouseDialogVisible) {
+      toggleControls()
+    }
+
     setModifyHouseDialogVisible(!modifyHouseDialogVisible);
   }
 
   const toggleDeleteHouseDialogVisible = () => {
+    if (deleteHouseDialogVisible) {
+      toggleControls()
+    }
+
     setDeleteHouseDialogVisible(!deleteHouseDialogVisible)
   }
 
   const handleHouseDelete = () => {
-    console.log(`House ${houseModel.getName()} is deleted`)
+    deleteStorage(houseModel.getName())
+      .then(response => {
+        if (response.status < 200 || response.status >= 300) {
+          alert("Something went wrong")
+          return
+        }
 
-    // TODO - Handle House deletion
+        console.log(`House ${houseModel.getName()} is deleted`)
+        updateHousesList()
+      })
+      .catch(error => {
+        const response = error.response
+
+        if (!response) {
+          alert("Something went wrong!")
+        }
+
+        if ('message' in response.data) {
+          alert(`${response.status}: ${response.data.message}`)
+        } else {
+          alert(`${response.status}: Something went wrong!`)
+        }
+      })
   }
 
   return (
@@ -69,7 +98,7 @@ const HouseCard = ({ house, onPress }) => {
       </TouchableOpacity>
 
       {/* Modify House Dialog */}
-      <ModifyStorageDialog storage={houseModel} visible={modifyHouseDialogVisible} onClose={toggleModifyHouseDialogVisible} />
+      <ModifyStorageDialog storage={houseModel} visible={modifyHouseDialogVisible} onClose={toggleModifyHouseDialogVisible} updateList={updateHousesList} />
 
       {/* Delete House Dialog */}
       <DeleteStorageDialog storage={houseModel} visible={deleteHouseDialogVisible} onClose={toggleDeleteHouseDialogVisible} onSubmit={handleHouseDelete} />
