@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StorageTypes } from '../../models/StorageTypes';
 import StorageModel from '../../models/StorageModel';
-import { updateStorage } from '../../services/ApiService/storageService';
+import { updateStorage } from '../../services/BackendApiService/storageService';
 
 // Setup validation schema using Yup
 const validationSchema = Yup.object({

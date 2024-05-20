@@ -6,7 +6,7 @@ import HouseCard from '../components/cards/HouseCard';
 import FloatingAddButton from '../components/buttons/FloatingAddButton';
 import AddHouseDialog from '../components/dialogs/AddHouseDialog';
 import StorageModel from '../models/StorageModel';
-import { getHouses } from '../services/ApiService/storageService';
+import { getHouses } from '../services/BackendApiService/storageService';
 import { useUpdate } from '../services/UpdateService/UpdateContext';
 import UpdateTypes from '../services/UpdateService/UpdateTypes';
 

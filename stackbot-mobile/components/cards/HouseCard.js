@@ -5,7 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 import StorageModel from '../../models/StorageModel';
 import DeleteStorageDialog from '../dialogs/DeleteStorageDialog';
 import ModifyStorageDialog from '../dialogs/ModifyStorageDialog';
-import { deleteStorage } from '../../services/ApiService/storageService';
+import { deleteStorage } from '../../services/BackendApiService/storageService';
 
 const HouseCard = ({ house, onPress, updateHousesList }) => {
 

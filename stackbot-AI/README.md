@@ -1,5 +1,13 @@
 # Backend AI
 
+## Using AI API
+
+Available endpoints:
+
+- `/process`
+  - `POST` request
+  - JSON data as an input, takes a `token` and a `text` and returns a `plain text` response
+
 ## Build AI
 
 ```sh

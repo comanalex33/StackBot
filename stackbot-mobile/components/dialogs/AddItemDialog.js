@@ -7,7 +7,7 @@ import { StorageTypes } from '../../models/StorageTypes';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import DateButton from '../buttons/DateButton';
 import { formatDate, formatDateForApiRequest } from '../../Helper';
-import { addItem } from '../../services/ApiService/itemService';
+import { addItem } from '../../services/BackendApiService/itemService';
 import StorageModel from '../../models/StorageModel';
 import { useUpdate } from '../../services/UpdateService/UpdateContext';
 import UpdateTypes from '../../services/UpdateService/UpdateTypes';

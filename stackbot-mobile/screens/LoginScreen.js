@@ -5,8 +5,9 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../components/buttons/Button';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { login } from '../services/ApiService/userService';
-import { setAuthToken } from '../services/ApiService/api';
+import { login } from '../services/BackendApiService/userService';
+import { setAuthToken } from '../services/BackendApiService/backendApi';
+import { setAuthTokenForAI } from '../services/AIApiService/aiApi';
 
 const reviewSchema = yup.object({
     email: yup.string()
@@ -35,6 +36,7 @@ export default function LoginScreen({ navigation }) {
                 }
                 
                 setAuthToken(response.data.token)
+                setAuthTokenForAI(response.data.token)
                 navigation.navigate("Houses")
             })
             .catch(error => {

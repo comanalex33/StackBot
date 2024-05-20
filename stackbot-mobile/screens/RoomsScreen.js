@@ -7,7 +7,7 @@ import '../assets/double-bed.png'
 import '../assets/living-room.png'
 import '../assets/door.png'
 import StorageModel from '../models/StorageModel';
-import { getRooms } from '../services/ApiService/storageService';
+import { getRooms } from '../services/BackendApiService/storageService';
 import { useUpdate } from '../services/UpdateService/UpdateContext';
 import UpdateTypes from '../services/UpdateService/UpdateTypes';
 

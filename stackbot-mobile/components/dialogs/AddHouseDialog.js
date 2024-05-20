@@ -4,7 +4,7 @@ import CustomDialog from './CustomDialog';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StorageTypeIndexFromName } from '../../models/StorageTypes';
-import { addStorage } from '../../services/ApiService/storageService';
+import { addStorage } from '../../services/BackendApiService/storageService';
 
 // Setup validation schema using Yup
 const validationSchema = Yup.object({

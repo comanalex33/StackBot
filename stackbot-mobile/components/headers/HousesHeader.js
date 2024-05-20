@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ConfirmLogoutDialog from '../dialogs/ConfirmLogoutDialog';
-import { unsetAuthToken } from '../../services/ApiService/api';
+import { unsetAuthToken } from '../../services/BackendApiService/backendApi';
 import { useUpdate } from '../../services/UpdateService/UpdateContext';
 import UpdateTypes from '../../services/UpdateService/UpdateTypes';
+import { unsetAuthTokenForAI } from '../../services/AIApiService/aiApi';
 
 const HousesHeader = () => {
 
@@ -20,6 +21,7 @@ const HousesHeader = () => {
         console.log("Logout User")
 
         unsetAuthToken()
+        unsetAuthTokenForAI()
         toggleLougoutDialogVisible()
         addUpdate(UpdateTypes.TRIGGER_LOGOUT)
     }
