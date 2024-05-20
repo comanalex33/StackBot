@@ -50,3 +50,23 @@ File format:
 ```sh
 npx expo start
 ```
+
+## Production
+
+### Android deployment
+
+`Prerequisites`: Install EAS using `npm install -g eas-cli`
+
+Steps to create an APK file for Android:
+
+```sh
+eas login                       # Login using Expo account (create one if you don't have one)
+eas build:configure             # Configure EAS build
+eas build --platform android    # Build project for Andr    oid
+
+# => Link to download AAB file
+
+# => Copy to Mobile phone
+# => Co
+# => Copy to Mobile phone
+```
