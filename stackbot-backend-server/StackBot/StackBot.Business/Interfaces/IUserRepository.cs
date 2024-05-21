@@ -10,7 +10,7 @@ namespace StackBot.Business.Interfaces
         Task<User> GetUserById(Guid userId);
         Task<User> UpdateUser(User user);
         Task DeleteUser(Guid userId);
-        Task AddUserToStorage(Guid ownerId, Guid houseId, Guid userId);
+        Task AddUserToStorage(Guid ownerId, Guid houseId, List<Guid> roomsIds, List<Guid> subStoragesIds, Guid userId);
         Task<ICollection<User>> GetUsersByHouseId(Guid ownerId, Guid houseId);
     }
 }

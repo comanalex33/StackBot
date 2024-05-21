@@ -105,7 +105,7 @@ namespace Stackbot.DataAccess.Repositories
             }
         }
 
-        public async Task AddUserToStorage(Guid ownerId, Guid houseId, Guid userId)
+        public async Task AddUserToStorage(Guid ownerId, Guid houseId, List<Guid> roomsIds, List<Guid> subStoragesIds, Guid userId)
         {
             var userStorages = await _context.UserStorage.Where(us => us.UserId == ownerId).Select(us => us.StorageId).ToListAsync();
 
@@ -131,6 +131,32 @@ namespace Stackbot.DataAccess.Repositories
             _context.UserStorage.Add(newUserStorage);
 
             await _context.SaveChangesAsync();
+
+            foreach (var id in roomsIds)
+            {
+                var newUserRoom = new UserStorage
+                {
+                    UserId = userId,
+                    StorageId = id,
+                };
+
+                _context.UserStorage.Add(newUserRoom);
+
+                await _context.SaveChangesAsync();
+            }
+
+            foreach (var id in subStoragesIds)
+            {
+                var newUserSubStorage = new UserStorage
+                {
+                    UserId = userId,
+                    StorageId = id,
+                };
+
+                _context.UserStorage.Add(newUserSubStorage);
+
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<ICollection<User>> GetUsersByHouseId(Guid ownerId, Guid houseId)
