@@ -67,7 +67,7 @@ namespace Stackbot.DataAccess.Repositories
         {
             var userStorages = await _context.UserStorage.Where(us => us.UserId == userId).Select(us => us.StorageId).ToListAsync();
 
-            var getItem = await _context.Items.FirstOrDefaultAsync(i => i.Name == name && userStorages.Contains(i.StorageId));
+            var getItem = await _context.Items.FirstOrDefaultAsync(i => i.Name.ToLower() == name.ToLower() && userStorages.Contains(i.StorageId));
 
             if (getItem == null)
             {

@@ -73,7 +73,7 @@ namespace Stackbot.DataAccess.Repositories
             {
                 var getStorage = await _context.Storages.FirstOrDefaultAsync(s => s.Id == userStorage.StorageId);
 
-                if(getStorage.Name == storageName)
+                if(getStorage.Name.ToLower() == storageName.ToLower())
                 {
                     return getStorage;
                 }
