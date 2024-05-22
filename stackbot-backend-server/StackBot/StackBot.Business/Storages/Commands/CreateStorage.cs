@@ -35,7 +35,12 @@ namespace StackBot.Business.Storages.Commands
 
             }
 
-            await _storageRepository.CreateStorage(storage, request.userId);
+            var newStorage = await _storageRepository.CreateStorage(storage, request.userId);
+
+            if (storageParent != null)
+            {
+                await _storageRepository.AddUsersFromParentStorage(storageParent.Id, newStorage.Id);
+            }
 
             return _mapper.Map<StorageResponseDto>(storage);
         }
