@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import StorageModel from '../../models/StorageModel';
 import AddItemDialog from '../dialogs/AddItemDialog';
 import MembersDialog from '../dialogs/MembersDialog';
+import RecordingButton from '../buttons/RecordingButton';
 
 const ItemsHeader = ({ route }) => {
 
@@ -26,19 +27,12 @@ const ItemsHeader = ({ route }) => {
     return (
         <View style={styles.header}>
             <View style={styles.headerLeftContainer}>
-                <TouchableOpacity
-                    style={styles.headerIcon}
-                    onPress={() => {
-                        // Handle microphone icon press
-                    }}
-                >
-                    <MaterialCommunityIcons name="microphone" size={34} color="black" />
-                </TouchableOpacity>
+                <RecordingButton style={styles.headerIcon} size={34} />
             </View>
             <View style={styles.headerRightContainer}>
                 <View style={styles.headerTitleContainer}>
                     <Text style={styles.headerTitle}>{houseModel.getName()}</Text>
-                    <Text style={styles.subheaderTitle}> { " > " + roomModel.getName() + " > " + spaceModel.getName()}</Text>
+                    <Text style={styles.subheaderTitle}> {" > " + roomModel.getName() + " > " + spaceModel.getName()}</Text>
                 </View>
                 <View style={styles.headerControlsContainer}>
                     <TouchableOpacity onPress={toggleAddItemDialog}>
@@ -48,17 +42,17 @@ const ItemsHeader = ({ route }) => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={toggleMembersDialog}>
                         <View style={styles.button} backgroundColor="gray">
-                        <MaterialCommunityIcons name="account-group" size={25} color="white" paddingHorizontal={30} />
+                            <MaterialCommunityIcons name="account-group" size={25} color="white" paddingHorizontal={30} />
                         </View>
                     </TouchableOpacity>
                 </View>
             </View>
 
             {/* Add Item Dialog */}
-            <AddItemDialog visible={addItemDialogVisible} onClose={toggleAddItemDialog} spaceType={spaceModel.getTypeText()} space={spaceModel}/>
+            <AddItemDialog visible={addItemDialogVisible} onClose={toggleAddItemDialog} spaceType={spaceModel.getTypeText()} space={spaceModel} />
 
             {/* See Members Dialog */}
-            <MembersDialog visible={membersDialogVisible} onClose={toggleMembersDialog} house={houseModel}/>
+            <MembersDialog visible={membersDialogVisible} onClose={toggleMembersDialog} house={houseModel} />
         </View>
     );
 };
