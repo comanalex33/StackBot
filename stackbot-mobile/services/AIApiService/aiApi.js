@@ -35,7 +35,7 @@ export const setAuthTokenForAI = token => {
 // Set up a method to detach the token
 export const unsetAuthTokenForAI = () => {
     if (interceptorId !== undefined) {
-        api.interceptors.request.eject(interceptorId);
+        aiApi.interceptors.request.eject(interceptorId);
         interceptorId = undefined;
     }
 };
