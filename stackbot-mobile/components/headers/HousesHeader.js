@@ -6,6 +6,7 @@ import { unsetAuthToken } from '../../services/BackendApiService/backendApi';
 import { useUpdate } from '../../services/UpdateService/UpdateContext';
 import UpdateTypes from '../../services/UpdateService/UpdateTypes';
 import { unsetAuthTokenForAI } from '../../services/AIApiService/aiApi';
+import RecordingButton from '../buttons/RecordingButton';
 
 const HousesHeader = () => {
 
@@ -28,14 +29,7 @@ const HousesHeader = () => {
 
     return (
         <View style={styles.header}>
-            <TouchableOpacity
-                style={styles.headerIcon}
-                onPress={() => {
-                    // TODO - Handle microphone icon press
-                }}
-            >
-                <MaterialCommunityIcons name="microphone" size={24} color="black" />
-            </TouchableOpacity>
+            <RecordingButton style={styles.headerIcon} size={24}/>
             <TouchableOpacity
                 style={styles.headerIcon}
                 onPress={toggleLougoutDialogVisible}

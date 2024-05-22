@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import StorageModel from '../../models/StorageModel';
 import AddSpaceDialog from '../dialogs/AddSpaceDialog';
 import MembersDialog from '../dialogs/MembersDialog';
+import RecordingButton from '../buttons/RecordingButton';
 
 const RoomContentHeader = ({ route }) => {
 
@@ -25,19 +26,12 @@ const RoomContentHeader = ({ route }) => {
     return (
         <View style={styles.header}>
             <View style={styles.headerLeftContainer}>
-                <TouchableOpacity
-                    style={styles.headerIcon}
-                    onPress={() => {
-                        // Handle microphone icon press
-                    }}
-                >
-                    <MaterialCommunityIcons name="microphone" size={34} color="black" />
-                </TouchableOpacity>
+                <RecordingButton style={styles.headerIcon} size={34} />
             </View>
             <View style={styles.headerRightContainer}>
                 <View style={styles.headerTitleContainer}>
                     <Text style={styles.headerTitle}>{houseModel.getName()}</Text>
-                    <Text style={styles.subheaderTitle}> { " > " + roomModel.getName()}</Text>
+                    <Text style={styles.subheaderTitle}> {" > " + roomModel.getName()}</Text>
                 </View>
                 <View style={styles.headerControlsContainer}>
                     <TouchableOpacity onPress={toggleAddSpaceDialog}>
@@ -47,17 +41,17 @@ const RoomContentHeader = ({ route }) => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={toggleMembersDialog}>
                         <View style={styles.button} backgroundColor="gray">
-                        <MaterialCommunityIcons name="account-group" size={25} color="white" paddingHorizontal={30} />
+                            <MaterialCommunityIcons name="account-group" size={25} color="white" paddingHorizontal={30} />
                         </View>
                     </TouchableOpacity>
                 </View>
             </View>
 
             {/* Add Space Dialog */}
-            <AddSpaceDialog visible={addSpaceDialogVisible} onClose={toggleAddSpaceDialog} room={roomModel}/>
+            <AddSpaceDialog visible={addSpaceDialogVisible} onClose={toggleAddSpaceDialog} room={roomModel} />
 
             {/* See Members Dialog */}
-            <MembersDialog visible={membersDialogVisible} onClose={toggleMembersDialog}/>
+            <MembersDialog visible={membersDialogVisible} onClose={toggleMembersDialog} house={houseModel} />
         </View>
     );
 };

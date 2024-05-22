@@ -1,6 +1,10 @@
 export function formatDate(date) {
     let dateObject = null
 
+    if(!date) {
+        return 'Not set'
+    }
+
     if(typeof date === 'string') {
         dateObject = new Date(date)
     } else {

@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import { View, TouchableWithoutFeedback, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Buffer } from "buffer";
 import { FontAwesome } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import secrets from '../secrets.json'
+import secrets from '../../secrets.json'
 import * as FileSystem from 'expo-file-system';
 
 import { Audio } from 'expo-av';
 import * as Speech from 'expo-speech';
+import { processText } from '../../services/AIApiService/aiService';
 
-export default function Main() {
+const RecordingButton = ({ size }) => {
 
     const [recording, setRecording] = useState(null)
     const [recordingInProgress, setRecordingInProgress] = useState(false)
-
     const [message, setMessage] = useState('')
-    const [buttonColor, setButtonColor] = useState('#ff5252'); // Default button color
 
     const assemblyAiApiKey = secrets.assembly_ai_api_key
 
@@ -24,11 +24,12 @@ export default function Main() {
         return new Promise((resolve) => setTimeout(resolve, time));
     } ``
 
-    const speak = () => {
-        Speech.speak(message);
+    const speak = (text) => {
+        Speech.speak(text);
     };
 
     async function startRecording() {
+        console.log("Test")
         // Requests permission when creating the recording session
         const { status } = await Audio.requestPermissionsAsync();
         if (status !== 'granted') {
@@ -59,7 +60,6 @@ export default function Main() {
         await recording.stopAndUnloadAsync();
         const uri = recording.getURI();
         setRecording(null)
-        console.log('Recording stored at', uri);
         processRecording(uri)
     }
 
@@ -67,6 +67,7 @@ export default function Main() {
         const base64Data = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
         const binaryData = Buffer.from(base64Data, 'base64');
 
+        speak("The recording is processing, wait 5 seconds")
         // Firstly upload the audio online
         fetch('https://api.assemblyai.com/v2/upload', {
             method: 'POST',
@@ -97,7 +98,7 @@ export default function Main() {
                     .then(data => {
                         const transcriptId = data['id']
 
-                        sleep(5000).then(() => {
+                        sleep(6000).then(() => {
                             getTranscript(transcriptId)
                         })
                     })
@@ -118,13 +119,33 @@ export default function Main() {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 setRecordingInProgress(false)
 
                 const text = data['text']
                 setMessage(text)
+                sendAIRequest(text)
             })
             .catch(err => console.error('Error:', err));
+    }
+
+    const sendAIRequest = (text) => {
+
+        if(!text) {
+            speak("The text couldn't be decoded, try again")
+        }
+
+        const processedText = text.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ").toLowerCase();
+        console.log("Text to be sent: ", processedText)
+
+        processText(processedText)
+            .then(response => {
+                console.log(response.data)
+                speak(response.data)
+            })
+            .catch(error => {
+                console.log(error.response)
+                speak("Something went wrong, try again")
+            })
     }
 
     const handleStartRecording = async () => {
@@ -140,56 +161,17 @@ export default function Main() {
     };
 
     return (
-        <View style={styles.container}>
-            <TouchableWithoutFeedback
-                onPressIn={() => {
-                    setButtonColor('#ff0000');  // Change color when recording starts
-                    handleStartRecording()
-                }}
-                onPressOut={() => {
-                    setButtonColor('#ff5252');  // Change color when recording starts
-                    handleStopRecording()
-                }}
-            >
-                <View style={[styles.button, { backgroundColor: buttonColor }]}>
-                    <FontAwesome name="microphone" size={30} color="#FFF" />
-                </View>
-            </TouchableWithoutFeedback>
-            <Text style={recordingInProgress ? styles.statusTextProcessing : styles.statusTextDone}>{message}</Text>
-            <TouchableOpacity
-                onPress={speak}
-            >
-                <View>
-                    <View style={[styles.button, { backgroundColor: buttonColor }]}>
-                        <FontAwesome name="volume-up" size={30} color="#FFF" />
-                    </View>
-                </View>
-            </TouchableOpacity>
-        </View>
-    );
+        <TouchableWithoutFeedback
+            onPressIn={() => {
+                handleStartRecording()
+            }}
+            onPressOut={() => {
+                handleStopRecording()
+            }}
+        >
+            <MaterialCommunityIcons name="microphone" size={size} color="black" />
+        </TouchableWithoutFeedback>
+    )
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f5fcff',
-    },
-    button: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    statusTextProcessing: {
-        fontSize: 18,
-        color: 'orange',
-    },
-    statusTextDone: {
-        fontSize: 18,
-        color: 'black',
-    },
-});
+export default RecordingButton;

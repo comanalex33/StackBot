@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const aiApi = axios.create({
-    baseURL: 'http://13.51.249.39',
+    baseURL: 'http://13.53.166.235',
     timeout: 1000
 })
 
@@ -35,7 +35,7 @@ export const setAuthTokenForAI = token => {
 // Set up a method to detach the token
 export const unsetAuthTokenForAI = () => {
     if (interceptorId !== undefined) {
-        api.interceptors.request.eject(interceptorId);
+        aiApi.interceptors.request.eject(interceptorId);
         interceptorId = undefined;
     }
 };

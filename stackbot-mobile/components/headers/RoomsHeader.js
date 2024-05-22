@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AddRoomDialog from '../dialogs/AddRoomDialog';
 import StorageModel from '../../models/StorageModel';
 import MembersDialog from '../dialogs/MembersDialog';
+import RecordingButton from '../buttons/RecordingButton';
 
 const RoomsHeader = ({ route }) => {
 
@@ -24,14 +25,7 @@ const RoomsHeader = ({ route }) => {
     return (
         <View style={styles.header}>
             <View style={styles.headerLeftContainer}>
-                <TouchableOpacity
-                    style={styles.headerIcon}
-                    onPress={() => {
-                        // Handle microphone icon press
-                    }}
-                >
-                    <MaterialCommunityIcons name="microphone" size={34} color="black" />
-                </TouchableOpacity>
+                <RecordingButton style={styles.headerIcon} size={34}/>
             </View>
             <View style={styles.headerRightContainer}>
                 <View style={styles.headerTitleContainer}>
@@ -55,7 +49,7 @@ const RoomsHeader = ({ route }) => {
             <AddRoomDialog visible={addRoomDialogVisible} onClose={toggleAddRoomDialog} house={houseModel}/>
 
             {/* See Members Dialog */}
-            <MembersDialog visible={membersDialogVisible} onClose={toggleMembersDialog}/>
+            <MembersDialog visible={membersDialogVisible} onClose={toggleMembersDialog} house={houseModel}/>
         </View>
     );
 };
