@@ -69,16 +69,26 @@ namespace Stackbot.DataAccess.Repositories
         {
             var userStorages = await _context.UserStorage.Where(us => us.UserId == userId).ToListAsync();
 
-            foreach(var userStorage in userStorages)
+            foreach (var userStorage in userStorages)
             {
                 var getStorage = await _context.Storages.FirstOrDefaultAsync(s => s.Id == userStorage.StorageId);
 
-                if(getStorage.Name.ToLower() == storageName.ToLower())
+                if (storageName != null)
                 {
-                    return getStorage;
+                    if (getStorage.Name.ToLower() == storageName.ToLower())
+                    {
+                        return getStorage;
+                    }
+                }
+                else
+                {
+                    if (getStorage.Name == storageName)
+                    {
+                        return getStorage;
+                    }
                 }
             }
-           
+
             return null;
         }
 
