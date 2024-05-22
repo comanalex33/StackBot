@@ -137,5 +137,25 @@ namespace Stackbot.DataAccess.Repositories
 
             return storages.Where(s => s.ParentStorageId == parentId && (s.Type == StorageType.Deposit || s.Type == StorageType.Fridge)).ToList();
         }
+
+        public async Task AddUsersFromParentStorage(Guid parentId, Guid childId)
+        {
+            var usersIds = await _context.UserStorage.Where(us => us.StorageId == parentId).Select(us => us.UserId).ToListAsync();
+
+            foreach (var userId in usersIds)
+            {
+                var userStorage = new UserStorage
+                {
+                    UserId = userId,
+                    StorageId = childId,
+                };
+
+                if (!_context.UserStorage.Any(us => us.UserId == userId && us.StorageId == childId))
+                {
+                    _context.UserStorage.Add(userStorage);
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
     }
 }
