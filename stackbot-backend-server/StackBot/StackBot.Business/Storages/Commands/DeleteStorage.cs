@@ -35,10 +35,10 @@ namespace StackBot.Business.Storages.Commands
 
                     foreach (var subSubStorage in subSubStorages)
                     {
-                        await _storageRepository.DeleteStorageById(request.userId, subSubStorage.Id);
+                        await _storageRepository.DeleteStorageById(subSubStorage.Id);
                     }
 
-                    await _storageRepository.DeleteStorageById(request.userId, subStorage.Id);
+                    await _storageRepository.DeleteStorageById(subStorage.Id);
                 }
             }
 
@@ -48,11 +48,11 @@ namespace StackBot.Business.Storages.Commands
 
                 foreach (var subStorage in subStorages)
                 {
-                    await _storageRepository.DeleteStorageById(request.userId, subStorage.Id);
+                    await _storageRepository.DeleteStorageById(subStorage.Id);
                 }
             }
 
-            await _storageRepository.DeleteStorageById(request.userId, storageToRemove.Id);
+            await _storageRepository.DeleteStorageById(storageToRemove.Id);
 
             return Unit.Value;
         }
