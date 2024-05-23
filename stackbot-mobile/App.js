@@ -4,7 +4,6 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { globalStyles } from './styles/global';
-import Main from './screens/main';
 import HousesScreen from './screens/HousesScreen';
 import HousesHeader from './components/headers/HousesHeader';
 import RoomsScreen from './screens/RoomsScreen';
@@ -27,7 +26,6 @@ export default function App() {
         >
           <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="Main" component={Main} />
           <Stack.Screen name="Houses" component={HousesScreen} options={{ header: () => <HousesHeader /> }} />
           <Stack.Screen name="Rooms" component={RoomsScreen} options={{ header: ({ route }) => <RoomsHeader route={route} /> }} />
           <Stack.Screen name="RoomContent" component={RoomContentScreen} options={{ header: ({ route }) => <RoomContentHeader route={route} /> }} />
