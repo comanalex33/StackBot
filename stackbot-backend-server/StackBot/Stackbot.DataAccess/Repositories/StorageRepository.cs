@@ -46,7 +46,7 @@ namespace Stackbot.DataAccess.Repositories
             return storage;
         }
 
-        public async Task DeleteStorageById(Guid userId, Guid storageId)
+        public async Task DeleteStorageById(Guid storageId)
         {
             var storageForDelete = await _context.Storages.FirstOrDefaultAsync(s => s.Id == storageId);
 
@@ -56,7 +56,7 @@ namespace Stackbot.DataAccess.Repositories
             }
 
             var userStorages = await _context.UserStorage
-                                             .Where(us => us.UserId == userId && us.StorageId == storageId)
+                                             .Where(us => us.StorageId == storageId)
                                              .ToListAsync();
 
             _context.UserStorage.RemoveRange(userStorages);
